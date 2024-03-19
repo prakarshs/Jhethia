@@ -18,7 +18,7 @@ public enum TokenType {
     Null("(khaali)(?=,|\\s|$)(?!_)"),
     This("(ye)(?=,|\\s|$)(?!_)"),
     Text("\"([^\"]*)\""),
-    Operator("(\\+|-|\\*{1,2}|/{1,2}|%|>=?|<=|<{1,2}|={1,2}|!=|!|:{2}\\s+naya|:{2}|\\(|\\)|(naya|aur|yatoh|as|is)(?=\\s|$)(?!_))"),
+    Operator("(\\+|-|\\*{1,2}|/{1,2}|%|>=?|<=|<{1,2}|={1,2}|!=|!|ka\\s+naya|ka|\\(|\\)|(naya|aur|yatoh|as|is)(?=\\s|$)(?!_))"),
     Variable("[a-zA-Z_]+[a-zA-Z0-9_]*");
 
     private final String regex;

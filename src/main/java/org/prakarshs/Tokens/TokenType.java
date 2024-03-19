@@ -1,5 +1,6 @@
-package org.prakarshs;
+package org.prakarshs.Tokens;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

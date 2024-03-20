@@ -20,6 +20,5 @@ public class EqualsOperator extends BinaryOperator{
                 result = ((Comparable) left.toString()).compareTo(right.toString()) == 0;
             }
             return new LogicalLiteral(result);
-        }
     }
 }

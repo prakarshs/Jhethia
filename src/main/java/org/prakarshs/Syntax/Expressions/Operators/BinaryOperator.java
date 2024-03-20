@@ -8,5 +8,5 @@ import org.prakarshs.Syntax.Literals.Literal;
 public abstract class BinaryOperator implements Operator{
     private final Expression left;
     private final Expression right;
-    public abstract Literal<?> calc(Literal<?> literal);
+    public abstract Literal<?> calc(Literal<?> left, Literal<?> right);
 }

@@ -2,7 +2,7 @@ package org.prakarshs.Syntax.Expressions.Operators;
 
 import org.prakarshs.Constants.ErrorConstants;
 import org.prakarshs.Exceptions.OperationException;
-import org.prakarshs.Syntax.Expression;
+import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.LogicalLiteral;
 

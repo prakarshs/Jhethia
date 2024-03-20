@@ -15,7 +15,7 @@ public enum OperatorEnum {
     Modulo("%", ModuloOperator.class, 6),
 
     Addition("\\+", AdditionOperator.class, 5),
-    Subtraction("-", SubtractionOperator.class, 5),
+    Subtraction("-", SubstractionOperator.class, 5),
 
     Equals("==", EqualsOperator.class, 4),
     NotEquals("!=", NotEqualsOperator.class, 4),

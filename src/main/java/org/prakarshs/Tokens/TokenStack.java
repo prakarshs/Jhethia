@@ -2,6 +2,8 @@ package org.prakarshs.Tokens;
 
 import lombok.Data;
 import org.apache.commons.lang3.ArrayUtils;
+import org.prakarshs.Constants.ErrorConstants;
+import org.prakarshs.Exceptions.SyntaxException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +27,11 @@ public class TokenStack {
                 return token;
             }
         }
-        throw new SyntaxException(String.format("After `%s` declaration expected any of the following lexemes `%s`", previous(), Arrays.toString(tokenTypes)));
+        String problem = ErrorConstants.SYNTAX_GALAT_HAI;
+
+        String solution = String.format("After `%s` declaration expected any of the following lexemes `%s`", previous(), Arrays.toString(tokenTypes));
+
+        throw new SyntaxException(problem, solution);
     }
 
     public void back() {
@@ -47,7 +53,10 @@ public class TokenStack {
                 return token;
             }
         }
-        throw new SyntaxException(String.format("After `%s` declaration expected `%s, %s` lexeme", previous(), type, value));
+        String problem = ErrorConstants.SYNTAX_GALAT_HAI;
+        String solution = String.format("After `%s` declaration expected `%s, %s` lexeme", previous(), type, value);
+
+        throw new SyntaxException(problem, solution);
     }
 
     public Token next() {

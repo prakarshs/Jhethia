@@ -27,8 +27,8 @@ public enum OperatorEnum {
     LeftParen("\\(", 3),
     RightParen("\\)", 3),
 
-    LogicalAnd("and", LogicalAndOperator.class, 2),
-    LogicalOr("or", LogicalOrOperator.class, 1),
+    LogicalAnd("aur", LogicalAndOperator.class, 2),
+    LogicalOr("yatoh", LogicalOrOperator.class, 1),
 
     Assignment("=", AssignmentOperator.class, 0);
 

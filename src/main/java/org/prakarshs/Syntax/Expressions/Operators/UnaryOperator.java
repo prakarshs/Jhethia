@@ -8,5 +8,5 @@ import org.prakarshs.Syntax.Literals.Literal;
 public abstract class UnaryOperator implements Operator{
     private final Expression literal;
 
-
+    public abstract Literal<?> calc(Literal<?> literal);
 }

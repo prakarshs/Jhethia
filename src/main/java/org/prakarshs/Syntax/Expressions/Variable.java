@@ -19,5 +19,5 @@ public class Variable implements Expression {
         }
         return value;
     }
-    }
+
 }

@@ -6,8 +6,8 @@ import org.prakarshs.Syntax.Literals.LogicalLiteral;
 
 import java.util.Objects;
 
-public class GreaterThanOperator extends BinaryOperator{
-    public GreaterThanOperator(Expression left, Expression right) {
+public class LessThanOperatorExpression extends BinaryOperatorExpression {
+    public LessThanOperatorExpression(Expression left, Expression right) {
         super(left, right);
     }
 
@@ -15,9 +15,9 @@ public class GreaterThanOperator extends BinaryOperator{
     public Literal<?> calc(Literal<?> left, Literal<?> right) {
         boolean result;
         if (Objects.equals(left.getClass(), right.getClass())) {
-            result = ((Comparable) left.getLiteral()).compareTo(right.getLiteral()) > 0;
+            result = ((Comparable) left.getLiteral()).compareTo(right.getLiteral()) < 0;
         } else {
-            result = left.toString().compareTo(right.toString()) > 0;
+            result = left.toString().compareTo(right.toString()) < 0;
         }
         return new LogicalLiteral(result);
 

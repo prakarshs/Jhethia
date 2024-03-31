@@ -5,8 +5,8 @@ import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.NumericalLiteral;
 import org.prakarshs.Syntax.Literals.TextLiteral;
 
-public class SubstractionOperator extends BinaryOperator{
-    public SubstractionOperator(Expression left, Expression right) {
+public class SubstractionOperatorExpression extends BinaryOperatorExpression {
+    public SubstractionOperatorExpression(Expression left, Expression right) {
         super(left, right);
     }
 

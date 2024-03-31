@@ -5,8 +5,8 @@ import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.NumericalLiteral;
 import org.prakarshs.Syntax.Literals.TextLiteral;
 
-public class AdditionOperator extends BinaryOperator{
-    public AdditionOperator(Expression left, Expression right) {
+public class AdditionOperatorExpression extends BinaryOperatorExpression {
+    public AdditionOperatorExpression(Expression left, Expression right) {
         super(left, right);
     }
 

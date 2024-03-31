@@ -5,7 +5,7 @@ import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Literals.Literal;
 
 @Data
-public abstract class UnaryOperator implements Operator{
+public abstract class UnaryOperatorExpression implements OperatorExpression {
     private final Expression literal;
 
     public abstract Literal<?> calc(Literal<?> literal);

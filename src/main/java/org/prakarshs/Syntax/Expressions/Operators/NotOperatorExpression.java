@@ -7,8 +7,8 @@ import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.LogicalLiteral;
 
 
-public class NotOperator extends UnaryOperator {
-    public NotOperator(Expression value) {
+public class NotOperatorExpression extends UnaryOperatorExpression {
+    public NotOperatorExpression(Expression value) {
         super(value);
     }
 

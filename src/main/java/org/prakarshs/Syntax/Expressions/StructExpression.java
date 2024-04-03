@@ -2,6 +2,7 @@ package org.prakarshs.Syntax.Expressions;
 
 import lombok.Data;
 import org.prakarshs.Syntax.Literals.Literal;
+import org.prakarshs.Syntax.Literals.StructLiteral;
 
 import java.util.List;
 import java.util.function.Function;
@@ -17,7 +18,7 @@ public class StructExpression implements Expression, Comparable<StructExpression
 
     @Override
     public Literal<?> evaluate() {
-        return null;
+        return new StructLiteral(this);
     }
 
     public Literal<?> getArgumentValue(String field) {
@@ -29,6 +30,15 @@ public class StructExpression implements Expression, Comparable<StructExpression
                 .orElse(null);
     }
 
+    private Literal<?> getValue(int index) {
+        Expression expression = expressionList.get(index);
+        if (expression instanceof Variable) {
+            return variableValue.apply(((Variable) expression).getVariableName());
+        } else {
+            return expression.evaluate();
+        }
+    }
+
     @Override
     public int compareTo(StructExpression o) {
         for (String field : structDefinition.getArguments()) {
@@ -38,7 +48,7 @@ public class StructExpression implements Expression, Comparable<StructExpression
             if (value == null) return -1;
             if (oValue == null) return 1;
             //noinspection unchecked,rawtypes
-            int result = ((Comparable) value.getValue()).compareTo(oValue.getValue());
+            int result = ((Comparable) value.getLiteral()).compareTo(oValue.getLiteral());
             if (result != 0) return result;
         }
         return 0;

@@ -14,12 +14,10 @@ import java.util.regex.Pattern;
 public class LexicalParser {
     private final List<Token> tokens;
     private final String source;
-    private int rowNumber;
 
     private LexicalParser(String source) {
         this.source = source;
         this.tokens = new ArrayList<>();
-        this.rowNumber = 1;
     }
     public void parse() {
         int position = 0;
@@ -42,10 +40,9 @@ public class LexicalParser {
             Matcher matcher = pattern.matcher(nextToken);
             if (matcher.find()) {
                 if (tokenType != TokenType.Whitespace) {
-                    System.out.println(tokenType);
                     // group(1) is used to get text literal without double quotes
                     String value = matcher.groupCount() > 0 ? matcher.group(1) : matcher.group();
-                    Token token = Token.builder().type(tokenType).value(value).rowNumber(rowNumber).build();
+                    Token token = Token.builder().type(tokenType).value(value).build();
                     tokens.add(token);
                 }
 
@@ -53,7 +50,7 @@ public class LexicalParser {
             }
         }
         String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-        String solution = String.format("Invalid expression at line %d", rowNumber);
+        String solution = "Invalid expression";
 
         throw new SyntaxException(problem,solution);
     }

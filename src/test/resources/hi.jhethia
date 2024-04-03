@@ -1,2 +1,10 @@
-dekhiye_baapuji your_name
-dekhiye_baapuji your_age
+dhancha Person
+    yeh_lo name
+    yeh_lo experience
+khatam
+
+lijiye_baapuji your_name
+lijiye_baapuji your_experience_in_years
+
+person = naya Person [your_name your_experience_in_years]
+dekhiye_baapuji person ka name

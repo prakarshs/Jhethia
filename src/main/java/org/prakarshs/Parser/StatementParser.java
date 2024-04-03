@@ -3,6 +3,7 @@ package org.prakarshs.Parser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.ArrayUtils;
 import org.prakarshs.Constants.ErrorConstants;
 import org.prakarshs.Exceptions.SyntaxException;
 import org.prakarshs.Syntax.Expressions.Expression;
@@ -42,11 +43,9 @@ public class StatementParser {
 
     public Statement parseExpression() {
         Token token = next(TokenType.Keyword, TokenType.Variable);
-
         switch (token.getType()) {
             case Variable: {
-                next(TokenType.Operator, TokenType.valueOf("=")); //skip equals
-
+                next(TokenType.Operator, "="); //skip equals
                 Expression value;
                 if (peek(TokenType.Keyword, "naya")) {
                     value = readInstance();
@@ -68,14 +67,14 @@ public class StatementParser {
                     }
                     case "agar": {
                         Expression condition = readExpression();
-                        next(TokenType.Keyword, TokenType.valueOf("ya")); //skip ya
+                        next(TokenType.Keyword, "toh"); //skip toh
 
                         ConditionStatement conditionStatement = new ConditionStatement(condition);
-                        while (!peek(TokenType.Keyword, "end")) {
+                        while (!peek(TokenType.Keyword, "khatam")) {
                             Statement statement = parseExpression();
                             conditionStatement.addStatement(statement);
                         }
-                        next(TokenType.Keyword, TokenType.valueOf("khatam")); //skip khatam
+                        next(TokenType.Keyword, "khatam"); //skip khatam
 
                         return conditionStatement;
                     }
@@ -84,15 +83,17 @@ public class StatementParser {
 
                         Set<String> args = new HashSet<>();
                         while (!peek(TokenType.Keyword, "khatam")) {
-                            next(TokenType.Keyword, TokenType.valueOf("yeh_lo"));
+
+                            next(TokenType.Keyword, "yeh_lo");
 
                             Token arg = next(TokenType.Variable);
                             args.add(arg.getValue());
+
                         }
-                        next(TokenType.Keyword, TokenType.valueOf("khatam")); //skip end
+
+                        next(TokenType.Keyword, "khatam"); //skip end
 
                         structures.put(type.getValue(), new StructDefinition(type.getValue(), new ArrayList<>(args)));
-
                         return null;
                     }
 
@@ -109,7 +110,7 @@ public class StatementParser {
     }
 
     private Token next(TokenType type, TokenType... types) {
-        TokenType[] tokenTypes = org.apache.commons.lang3.ArrayUtils.add(types, type);
+        TokenType[] tokenTypes = ArrayUtils.add(types, type);
         if (position < tokens.size()) {
             Token token = tokens.get(position);
             if (Stream.of(tokenTypes).anyMatch(t -> t == token.getType())) {
@@ -180,20 +181,21 @@ public class StatementParser {
     }
 
     private Expression readInstance() {
-        next(TokenType.Keyword, TokenType.valueOf("naya")); //skip new
+
+        next(TokenType.Keyword, "naya"); //skip new
         Token type = next(TokenType.Variable);
         List<Expression> arguments = new ArrayList<>();
 
         if (peek(TokenType.GroupDivider, "[")) {
 
-            next(TokenType.GroupDivider, TokenType.valueOf("[")); //skip open square bracket
+            next(TokenType.GroupDivider, "["); //skip open square bracket
 
             while (!peek(TokenType.GroupDivider, "]")) {
                 Expression value = readExpression();
                 arguments.add(value);
             }
 
-            next(TokenType.GroupDivider, TokenType.valueOf("]")); //skip close square bracket
+            next(TokenType.GroupDivider, "]"); //skip close square bracket
         }
 
         StructDefinition definition = structures.get(type.getValue());
@@ -213,6 +215,23 @@ public class StatementParser {
             root.addStatement(statement);
         }
         return root;
+    }
+
+    public Token next(TokenType type, String value, String... values) {
+        if (position < tokens.size()) {
+            String[] allValues = ArrayUtils.add(values, value);
+            Token token = tokens.get(position);
+            if (token.getType() == type && Arrays.stream(allValues).anyMatch(t -> Objects.equals(t, token.getValue()))) {
+                position++;
+                return token;
+            }
+        }
+        Token previousToken = tokens.get(position - 1);
+
+        String problem = ErrorConstants.SYNTAX_GALAT_HAI;
+        String solution = String.format("After `%s` declaration expected `%s, %s` lexeme", previousToken,type, value);
+
+        throw new SyntaxException(problem, solution);
     }
 
 }

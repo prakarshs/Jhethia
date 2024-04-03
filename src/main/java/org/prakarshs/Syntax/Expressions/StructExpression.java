@@ -1,6 +1,7 @@
 package org.prakarshs.Syntax.Expressions;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.StructLiteral;
 
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Data
+@RequiredArgsConstructor
 public class StructExpression implements Expression, Comparable<StructExpression> {
     private final StructDefinition structDefinition;
     private final Function<String, Literal<?>> variableValue;

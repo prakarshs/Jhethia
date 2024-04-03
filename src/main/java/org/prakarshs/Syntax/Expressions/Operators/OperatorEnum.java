@@ -9,21 +9,17 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Getter
 public enum OperatorEnum {
-    Not("!", NotOperator.class,7),
-    Addition("+", AdditionOperator.class,5),
-    Subtraction("-", SubstractionOperator.class,5),
-    Equality("==", EqualsOperator.class,4),
-    GreaterThan(">", GreaterThanOperator.class,4),
-    LessThan("<", LessThanOperator.class,4),
-    StructureValue("ka", StructOperator.class,7);
+    Not("!", NotOperator.class),
+    Addition("+", AdditionOperator.class),
+    Subtraction("-", SubstractionOperator.class),
+    Equality("==", EqualsOperator.class),
+    GreaterThan(">", GreaterThanOperator.class),
+    LessThan("<", LessThanOperator.class),
+    StructureValue("ka", StructOperator.class);
 
     private final String character;
     private final Class<? extends OperatorExpression> type;
-    private final Integer precedence;
 
-    OperatorEnum(String character, Integer precedence) {
-        this(character, null, precedence);
-    }
 
     public static Class<? extends OperatorExpression> getType(String character) {
         return Arrays.stream(values())
@@ -32,7 +28,4 @@ public enum OperatorEnum {
                 .findAny().orElse(null);
     }
 
-    public boolean greaterThan(OperatorEnum o) {
-        return getPrecedence().compareTo(o.getPrecedence()) >= 0;
-    }
 }

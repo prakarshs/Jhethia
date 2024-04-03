@@ -47,11 +47,6 @@ public class LexicalParser {
                     String value = matcher.groupCount() > 0 ? matcher.group(1) : matcher.group();
                     Token token = Token.builder().type(tokenType).value(value).rowNumber(rowNumber).build();
                     tokens.add(token);
-
-                    if (tokenType == TokenType.LineBreak) {
-                        System.out.println("LB");
-                        rowNumber++;
-                    }
                 }
 
                 return matcher.group().length();

@@ -16,7 +16,7 @@ public class LexicalParser {
     private final String source;
     private int rowNumber;
 
-    private LexicalParser(String source) {
+    public LexicalParser(String source) {
         this.source = source;
         this.tokens = new ArrayList<>();
         this.rowNumber = 1;

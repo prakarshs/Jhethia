@@ -21,18 +21,12 @@ public class LexicalParser {
         this.tokens = new ArrayList<>();
         this.rowNumber = 1;
     }
-    public static List<Token> parse(String source) {
-        LexicalParser parser = new LexicalParser(source);
-        parser.parse();
-        return parser.tokens;
-    }
-
-    private void parse() {
-        int position = 0; // position in the source code
+    public List<Token> parse() {
+        int position = 0;
         while (position < source.length()) {
-            // read a lexeme and skip its length
             position += nextToken(position);
         }
+        return tokens;
     }
 
     private int nextToken(int position) {

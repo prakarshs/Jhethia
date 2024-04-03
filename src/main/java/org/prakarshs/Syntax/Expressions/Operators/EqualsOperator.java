@@ -6,8 +6,8 @@ import org.prakarshs.Syntax.Literals.LogicalLiteral;
 
 import java.util.Objects;
 
-public class EqualsOperatorExpression extends BinaryOperatorExpression {
-    public EqualsOperatorExpression(Expression left, Expression right) {
+public class EqualsOperator extends BinaryOperator{
+    public EqualsOperator(Expression left, Expression right) {
         super(left, right);
     }
 

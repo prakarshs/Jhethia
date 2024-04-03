@@ -14,8 +14,7 @@ public class Jhethia {
     @SneakyThrows
     public void execute(Path path) {
         String source = Files.readString(path);
-        LexicalParser lexicalParser = new LexicalParser(source);
-        List<Token> tokens = lexicalParser.parse();
+        List<Token> tokens = LexicalParser.parse(source);
         StatementParser statementParser = new StatementParser(tokens);
         Statement statement = statementParser.parse();
         statement.execute();

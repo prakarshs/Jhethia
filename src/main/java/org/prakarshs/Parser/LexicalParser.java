@@ -16,33 +16,40 @@ public class LexicalParser {
     private final String source;
     private int rowNumber;
 
-    public LexicalParser(String source) {
+    private LexicalParser(String source) {
         this.source = source;
         this.tokens = new ArrayList<>();
         this.rowNumber = 1;
     }
-    public List<Token> parse() {
+    public void parse() {
         int position = 0;
         while (position < source.length()) {
             position += nextToken(position);
         }
-        return tokens;
     }
+
+    public static List<Token> parse(String sourceCode) {
+        LexicalParser parser = new LexicalParser(sourceCode);
+        parser.parse();
+        return parser.tokens;
+    }
+
 
     private int nextToken(int position) {
         String nextToken = source.substring(position);
-
         for (TokenType tokenType : TokenType.values()) {
             Pattern pattern = Pattern.compile("^" + tokenType.getRegex());
             Matcher matcher = pattern.matcher(nextToken);
             if (matcher.find()) {
                 if (tokenType != TokenType.Whitespace) {
+                    System.out.println(tokenType);
                     // group(1) is used to get text literal without double quotes
                     String value = matcher.groupCount() > 0 ? matcher.group(1) : matcher.group();
                     Token token = Token.builder().type(tokenType).value(value).rowNumber(rowNumber).build();
                     tokens.add(token);
 
                     if (tokenType == TokenType.LineBreak) {
+                        System.out.println("LB");
                         rowNumber++;
                     }
                 }

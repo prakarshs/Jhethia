@@ -1,0 +1,6 @@
+lijiye_baapuji first_value
+lijiye_baapuji second_value
+
+result = first_value*second_value
+
+dekhiye_baapuji "The result Is: " + result

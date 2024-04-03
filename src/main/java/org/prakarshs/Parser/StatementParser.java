@@ -2,11 +2,14 @@ package org.prakarshs.Parser;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.prakarshs.Constants.ErrorConstants;
 import org.prakarshs.Exceptions.SyntaxException;
 import org.prakarshs.Syntax.Expressions.Expression;
+import org.prakarshs.Syntax.Expressions.Operators.BinaryOperator;
 import org.prakarshs.Syntax.Expressions.Operators.OperatorEnum;
 import org.prakarshs.Syntax.Expressions.Operators.OperatorExpression;
+import org.prakarshs.Syntax.Expressions.Operators.UnaryOperator;
 import org.prakarshs.Syntax.Expressions.Variable;
 import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.LogicalLiteral;
@@ -16,17 +19,20 @@ import org.prakarshs.Syntax.Statements.Statement;
 import org.prakarshs.Tokens.Token;
 import org.prakarshs.Tokens.TokenType;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @Data
 @AllArgsConstructor
 public class StatementParser {
     private final List<Token> tokens;
-    private int position;
     private final Map<String, Literal<?>> variables;
+    private int position;
 
-    public StatementParser(List<Token> tokens){
+    public StatementParser(List<Token> tokens) {
         this.tokens = tokens;
         this.variables = new HashMap<>();
     }
@@ -63,7 +69,7 @@ public class StatementParser {
         String problem = ErrorConstants.SYNTAX_GALAT_HAI;
         String solution = String.format("After `%s` declaration expected any of the following lexemes `%s`", previousToken, Arrays.toString(tokenTypes));
 
-        throw new SyntaxException(problem,solution);
+        throw new SyntaxException(problem, solution);
     }
 
     private boolean peek(TokenType type, String value) {
@@ -74,24 +80,51 @@ public class StatementParser {
         return false;
     }
 
+    @SneakyThrows
     private Expression readExpression() {
-        Expression left;
+        Expression left = nextExpression();
+
+        while (peek(TokenType.Operator)) {
+            Token operation = next(TokenType.Operator);
+            Class<? extends OperatorExpression> operatorType = OperatorEnum.getType(operation.getValue());
+
+            if (BinaryOperator.class.isAssignableFrom(operatorType)) {
+                Expression right = nextExpression();
+                left = operatorType
+                        .getConstructor(Expression.class, Expression.class)
+                        .newInstance(left, right);
+            } else if (UnaryOperator.class.isAssignableFrom(operatorType)) {
+                left = operatorType
+                        .getConstructor(Expression.class)
+                        .newInstance(left);
+            }
+        }
+
+        return left;
+    }
+
+    private Expression nextExpression() {
         Token token = next(TokenType.Variable, TokenType.Numeric, TokenType.Logical, TokenType.Text);
         String value = token.getValue();
         switch (token.getType()) {
             case Numeric:
-                left = new NumericalLiteral(Integer.parseInt(value));
+                return new NumericalLiteral(Integer.parseInt(value));
             case Logical:
-                left = new LogicalLiteral(Boolean.valueOf(value));
+                return new LogicalLiteral(Boolean.valueOf(value));
             case Text:
-                left = new TextLiteral(value);
+                return new TextLiteral(value);
             case Variable:
             default:
-                left = new Variable(value, variables::get);
+                return new Variable(value, variables::get);
         }
-
-        Token operation = next(TokenType.Operator);
-        Class<? extends OperatorExpression> operatorType = OperatorEnum.getType(operation.getValue());
-
     }
+    private boolean peek(TokenType type) {
+        if (position < tokens.size()) {
+            Token token = tokens.get(position);
+            return token.getType() == type;
+        }
+        return false;
+    }
+
 }
+

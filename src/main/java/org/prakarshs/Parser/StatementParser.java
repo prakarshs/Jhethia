@@ -103,7 +103,8 @@ public class StatementParser {
             {
                 String problem = ErrorConstants.SYNTAX_GALAT_HAI;
                 String solution = String.format("Statement can't start with the following lexeme `%s`", token);
-
+                System.out.println("Poblem : "+problem);
+                System.out.println("Solution : "+solution);
                 throw new SyntaxException(problem,solution);
             }
         }
@@ -122,7 +123,8 @@ public class StatementParser {
 
         String problem = ErrorConstants.SYNTAX_GALAT_HAI;
         String solution = String.format("After `%s` declaration expected any of the following lexemes `%s`", previousToken, Arrays.toString(tokenTypes));
-
+        System.out.println("Poblem : "+problem);
+        System.out.println("Solution : "+solution);
         throw new SyntaxException(problem, solution);
     }
 
@@ -137,7 +139,6 @@ public class StatementParser {
     @SneakyThrows
     private Expression readExpression() {
         Expression left = nextExpression();
-
         while (peek(TokenType.Operator)) {
             Token operation = next(TokenType.Operator);
             Class<? extends OperatorExpression> operatorType = OperatorEnum.getType(operation.getValue());
@@ -202,6 +203,8 @@ public class StatementParser {
         if (definition == null) {
             String problem = ErrorConstants.SYNTAX_GALAT_HAI;
             String solution = String.format("Structure is not defined: %s", type.getValue());
+            System.out.println("Poblem : "+problem);
+            System.out.println("Solution : "+solution);
             throw new SyntaxException(problem, solution);
         }
         return new StructExpression(definition,variables::get,arguments);
@@ -230,7 +233,8 @@ public class StatementParser {
 
         String problem = ErrorConstants.SYNTAX_GALAT_HAI;
         String solution = String.format("After `%s` declaration expected `%s, %s` lexeme", previousToken,type, value);
-
+        System.out.println("Poblem : "+problem);
+        System.out.println("Solution : "+solution);
         throw new SyntaxException(problem, solution);
     }
 

@@ -16,12 +16,16 @@ public class DivisionOperator extends BinaryOperator{
         if (left instanceof NumericalLiteral && right instanceof NumericalLiteral) {
             Integer rightValue = ((NumericalLiteral) right).getLiteral();
             if (rightValue == 0) {
-                throw new OperationException(ErrorConstants.DIVISION_BY_ZERO, "Try With A different Denominator");
+                System.out.println("Poblem : "+ErrorConstants.DIVISION_BY_ZERO);
+                System.out.println("Solution : "+"Try With A different Denominator");
+                throw new OperationException(ErrorConstants.DIVISION_BY_ZERO,"Try With A different Denominator" );
             }
             return new NumericalLiteral(((NumericalLiteral) left).getLiteral() / rightValue);
         } else {
             String problem = ErrorConstants.OPERATION_IMPOSSIBLE;
             String solution = String.format("Unable to divide non-numeric values `%s` by `%s`", left, right);
+            System.out.println("Poblem : "+problem);
+            System.out.println("Solution : "+solution);
             throw new OperationException(problem, solution);
         }
     }

@@ -19,6 +19,8 @@ public class NotOperator extends UnaryOperator {
         } else {
             String problem = ErrorConstants.OPERATION_IMPOSSIBLE;
             String solution = String.format("Unable to perform NOT operator for non logical value `%s`", literal);
+            System.out.println("Poblem : "+problem);
+            System.out.println("Solution : "+solution);
             throw new OperationException(problem,solution);
         }
     }

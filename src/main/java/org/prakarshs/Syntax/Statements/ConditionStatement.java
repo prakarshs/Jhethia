@@ -23,7 +23,8 @@ public class ConditionStatement extends CompoundStatement{
         } else {
             String problem = ErrorConstants.EXECUTION_IMPOSSIBLE;
             String solution = String.format("Cannot compare non logical value `%s`", literal);
-
+            System.out.println("Poblem : "+problem);
+            System.out.println("Solution : "+solution);
             throw new ExecutionException(problem,solution);
         }
     }

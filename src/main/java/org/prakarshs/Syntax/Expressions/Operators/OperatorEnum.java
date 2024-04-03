@@ -12,6 +12,8 @@ public enum OperatorEnum {
     Not("!", NotOperator.class),
     Addition("+", AdditionOperator.class),
     Subtraction("-", SubstractionOperator.class),
+    Multiplication("*", MultiplicationOperator.class),
+    Division("/", DivisionOperator.class),
     Equality("==", EqualsOperator.class),
     GreaterThan(">", GreaterThanOperator.class),
     LessThan("<", LessThanOperator.class),

@@ -18,6 +18,8 @@ public class MultiplicationOperator extends BinaryOperator{
         } else {
             String problem = ErrorConstants.OPERATION_IMPOSSIBLE;
             String solution = String.format("Unable to multiply non numeric values `%s` and `%s`", left, right);
+            System.out.println("Poblem : "+problem);
+            System.out.println("Solution : "+solution);
             throw new OperationException(problem, solution);
         }
     }

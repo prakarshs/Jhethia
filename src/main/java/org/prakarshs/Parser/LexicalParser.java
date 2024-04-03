@@ -50,8 +50,9 @@ public class LexicalParser {
             }
         }
         String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-        String solution = "Invalid expression";
-
+        String solution = "Invalid expression, Try Again.";
+        System.out.println("Poblem : "+problem);
+        System.out.println("Solution : "+solution);
         throw new SyntaxException(problem,solution);
     }
 }

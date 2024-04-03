@@ -14,7 +14,8 @@ public enum OperatorEnum {
     Subtraction("-", SubstractionOperator.class,5),
     Equality("==", EqualsOperator.class,4),
     GreaterThan(">", GreaterThanOperator.class,4),
-    LessThan("<", LessThanOperator.class,4);
+    LessThan("<", LessThanOperator.class,4),
+    StructureValue("ka", StructOperator.class,7);
 
     private final String character;
     private final Class<? extends OperatorExpression> type;
@@ -24,9 +25,10 @@ public enum OperatorEnum {
         this(character, null, precedence);
     }
 
-    public static OperatorEnum getType(String character) {
+    public static Class<? extends OperatorExpression> getType(String character) {
         return Arrays.stream(values())
-                .filter(t -> character.matches(t.getCharacter()))
+                .filter(t -> Objects.equals(t.getCharacter(),character))
+                .map(OperatorEnum::getType)
                 .findAny().orElse(null);
     }
 

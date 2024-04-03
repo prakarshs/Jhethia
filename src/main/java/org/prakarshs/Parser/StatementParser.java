@@ -10,6 +10,8 @@ import org.prakarshs.Syntax.Expressions.Operators.BinaryOperator;
 import org.prakarshs.Syntax.Expressions.Operators.OperatorEnum;
 import org.prakarshs.Syntax.Expressions.Operators.OperatorExpression;
 import org.prakarshs.Syntax.Expressions.Operators.UnaryOperator;
+import org.prakarshs.Syntax.Expressions.StructDefinition;
+import org.prakarshs.Syntax.Expressions.StructExpression;
 import org.prakarshs.Syntax.Expressions.Variable;
 import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.LogicalLiteral;
@@ -19,10 +21,7 @@ import org.prakarshs.Syntax.Statements.Statement;
 import org.prakarshs.Tokens.Token;
 import org.prakarshs.Tokens.TokenType;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Data
@@ -31,10 +30,12 @@ public class StatementParser {
     private final List<Token> tokens;
     private final Map<String, Literal<?>> variables;
     private int position;
+    private final Map<String, StructDefinition> structures;
 
     public StatementParser(List<Token> tokens) {
         this.tokens = tokens;
         this.variables = new HashMap<>();
+        this.structures = new HashMap<>();
     }
 
     public Statement parseExpression() {
@@ -125,6 +126,34 @@ public class StatementParser {
         }
         return false;
     }
+
+    private Expression readInstance() {
+        next(TokenType.Keyword, TokenType.valueOf("naya")); //skip new
+        Token type = next(TokenType.Variable);
+        List<Expression> arguments = new ArrayList<>();
+
+        if (peek(TokenType.GroupDivider, "[")) {
+
+            next(TokenType.GroupDivider, TokenType.valueOf("[")); //skip open square bracket
+
+            while (!peek(TokenType.GroupDivider, "]")) {
+                Expression value = readExpression();
+                arguments.add(value);
+            }
+
+            next(TokenType.GroupDivider, TokenType.valueOf("]")); //skip close square bracket
+        }
+
+        StructDefinition definition = structures.get(type.getValue());
+        if (definition == null) {
+            String problem = ErrorConstants.SYNTAX_GALAT_HAI;
+            String solution = String.format("Structure is not defined: %s", type.getValue());
+            throw new SyntaxException(problem, solution);
+        }
+        return new StructExpression(definition,variables::get,arguments);
+
+    }
+
 
 }
 

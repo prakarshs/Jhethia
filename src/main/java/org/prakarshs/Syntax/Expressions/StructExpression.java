@@ -12,9 +12,8 @@ import java.util.stream.IntStream;
 @Data
 public class StructExpression implements Expression, Comparable<StructExpression> {
     private final StructDefinition structDefinition;
-    private List<Expression> expressionList;
-
     private final Function<String, Literal<?>> variableValue;
+    private final List<Expression> expressionList;
 
     @Override
     public Literal<?> evaluate() {

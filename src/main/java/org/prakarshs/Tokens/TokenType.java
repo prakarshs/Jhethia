@@ -12,7 +12,7 @@ public enum TokenType {
     Comment("\\#.*"),
     LineBreak("[\\n\\r]"),
     Whitespace("[\\s\\t]"),
-    Keyword("(agar|yafir|ya|khatam|dekhiye_baapuji|lijiye_baapuji|kilass|kaam|wapas|ghumaghum|andar|by|todiye|agla|assert|raise|ishtart|rescue|ensure)(?=\\s|$)(?!_)"),
+    Keyword("(agar|yafir|ya|khatam|dekhiye_baapuji|lijiye_baapuji|dhancha|kaam|wapas|ghumaghum|andar|by|todiye|agla|assert|raise|ishtart|rescue|ensure|yeh_lo)(?=\\s|$)(?!_)"),
     GroupDivider("(\\[|\\]|\\,|\\{|}|\\.{2}|(\\:(?!\\:)))"),
     Logical("(sahi_baat_hai|galat_baat_hai)(?=\\s|$)(?!_)"),
     Numeric("([-]?(?=[.]?[0-9])[0-9]*(?![.]{2})[.]?[0-9]*)"),

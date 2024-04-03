@@ -17,7 +17,7 @@ import org.prakarshs.Syntax.Literals.Literal;
 import org.prakarshs.Syntax.Literals.LogicalLiteral;
 import org.prakarshs.Syntax.Literals.NumericalLiteral;
 import org.prakarshs.Syntax.Literals.TextLiteral;
-import org.prakarshs.Syntax.Statements.Statement;
+import org.prakarshs.Syntax.Statements.*;
 import org.prakarshs.Tokens.Token;
 import org.prakarshs.Tokens.TokenType;
 
@@ -31,18 +31,20 @@ public class StatementParser {
     private final Map<String, Literal<?>> variables;
     private int position;
     private final Map<String, StructDefinition> structures;
+    private final Scanner scanner;
 
     public StatementParser(List<Token> tokens) {
         this.tokens = tokens;
         this.variables = new HashMap<>();
         this.structures = new HashMap<>();
+        this.scanner = new Scanner(System.in);
     }
 
     public Statement parseExpression() {
         Token token = next(TokenType.Keyword, TokenType.Variable);
 
         switch (token.getType()) {
-            case Variable:
+            case Variable: {
                 next(TokenType.Operator, TokenType.valueOf("=")); //skip equals
 
                 Expression value;
@@ -53,6 +55,56 @@ public class StatementParser {
                 }
 
                 return new AssignStatement(token.getValue(), value, variables::put);
+            }
+            case Keyword: {
+                switch (token.getValue()) {
+                    case "dekhiye_baapuji": {
+                        Expression expression = readExpression();
+                        return new PrintStatement(expression);
+                    }
+                    case "lijiye_baapuji": {
+                        Token variable = next(TokenType.Variable);
+                        return new InputStatement(variable.getValue(), scanner::nextLine, variables::put);
+                    }
+                    case "agar": {
+                        Expression condition = readExpression();
+                        next(TokenType.Keyword, TokenType.valueOf("ya")); //skip ya
+
+                        ConditionStatement conditionStatement = new ConditionStatement(condition);
+                        while (!peek(TokenType.Keyword, "end")) {
+                            Statement statement = parseExpression();
+                            conditionStatement.addStatement(statement);
+                        }
+                        next(TokenType.Keyword, TokenType.valueOf("khatam")); //skip khatam
+
+                        return conditionStatement;
+                    }
+                    case "dhancha": {
+                        Token type = next(TokenType.Variable);
+
+                        Set<String> args = new HashSet<>();
+                        while (!peek(TokenType.Keyword, "khatam")) {
+                            next(TokenType.Keyword, TokenType.valueOf("yeh_lo"));
+
+                            Token arg = next(TokenType.Variable);
+                            args.add(arg.getValue());
+                        }
+                        next(TokenType.Keyword, TokenType.valueOf("khatam")); //skip end
+
+                        structures.put(type.getValue(), new StructDefinition(type.getValue(), new ArrayList<>(args)));
+
+                        return null;
+                    }
+
+                }
+            }
+            default:
+            {
+                String problem = ErrorConstants.SYNTAX_GALAT_HAI;
+                String solution = String.format("Statement can't start with the following lexeme `%s`", token);
+
+                throw new SyntaxException(problem,solution);
+            }
         }
     }
 
@@ -154,6 +206,14 @@ public class StatementParser {
 
     }
 
+    public Statement parse() {
+        CompoundStatement root = new CompoundStatement();
+        while (position < tokens.size()) {
+            Statement statement = parseExpression();
+            root.addStatement(statement);
+        }
+        return root;
+    }
 
 }
 

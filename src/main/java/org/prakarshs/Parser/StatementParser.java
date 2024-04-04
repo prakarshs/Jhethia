@@ -36,8 +36,8 @@ public class StatementParser {
 
     public StatementParser(List<Token> tokens) {
         this.tokens = tokens;
-        this.variables = new LinkedHashMap<>();
-        this.structures = new LinkedHashMap<>();
+        this.variables = new HashMap<>();
+        this.structures = new HashMap<>();
         this.scanner = new Scanner(System.in);
     }
 

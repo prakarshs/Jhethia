@@ -36,8 +36,8 @@ public class StatementParser {
 
     public StatementParser(List<Token> tokens) {
         this.tokens = tokens;
-        this.variables = new HashMap<>();
-        this.structures = new HashMap<>();
+        this.variables = new LinkedHashMap<>();
+        this.structures = new LinkedHashMap<>();
         this.scanner = new Scanner(System.in);
     }
 
@@ -81,7 +81,7 @@ public class StatementParser {
                     case "dhancha": {
                         Token type = next(TokenType.Variable);
 
-                        Set<String> args = new HashSet<>();
+                        Set<String> args = new LinkedHashSet<>();
                         while (!peek(TokenType.Keyword, "khatam")) {
 
                             next(TokenType.Keyword, "yeh_lo");
@@ -90,7 +90,6 @@ public class StatementParser {
                             args.add(arg.getValue());
 
                         }
-
                         next(TokenType.Keyword, "khatam"); //skip end
 
                         structures.put(type.getValue(), new StructDefinition(type.getValue(), new ArrayList<>(args)));

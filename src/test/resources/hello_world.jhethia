@@ -1,6 +1,3 @@
 lijiye_baapuji first_value
-
-result = !first_value
-
-dekhiye_baapuji "The result Is: " + result
+dekhiye_baapuji first_value == 10
 

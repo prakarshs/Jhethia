@@ -58,10 +58,12 @@ public class StatementParser {
             case Keyword: {
                 switch (token.getValue()) {
                     case "dekhiye_baapuji": {
+
                         Expression expression = readExpression();
                         return new PrintStatement(expression);
                     }
                     case "lijiye_baapuji": {
+
                         Token variable = next(TokenType.Variable);
                         return new InputStatement(variable.getValue(), scanner::nextLine, variables::put);
                     }
@@ -114,7 +116,6 @@ public class StatementParser {
         if (position < tokens.size()) {
             Token token = tokens.get(position);
             if (Stream.of(tokenTypes).anyMatch(t -> t == token.getType())) {
-                System.out.println(token.getType()+", "+token.getValue());
                 position++;
                 return token;
             }
@@ -137,11 +138,11 @@ public class StatementParser {
 
     @SneakyThrows
     private Expression readExpression() {
+
         Expression left = nextExpression();
         while (peek(TokenType.Operator)) {
             Token operation = next(TokenType.Operator);
             Class<? extends OperatorExpression> operatorType = OperatorEnum.getType(operation.getValue());
-
             if (BinaryOperator.class.isAssignableFrom(operatorType)) {
                 Expression right = nextExpression();
                 left = operatorType
@@ -158,7 +159,7 @@ public class StatementParser {
     }
 
     private Expression nextExpression() {
-        Token token = next(TokenType.Variable, TokenType.Numeric, TokenType.Logical, TokenType.Text);
+        Token token = next(TokenType.Variable, TokenType.Numeric, TokenType.Logical, TokenType.Text, TokenType.Operator);
         String value = token.getValue();
         switch (token.getType()) {
             case Numeric:
@@ -166,6 +167,7 @@ public class StatementParser {
             case Logical:
                 return new LogicalLiteral(Boolean.valueOf(value));
             case Text:
+                System.out.println("text literal");
                 return new TextLiteral(value);
             case Variable:
             default:
@@ -223,6 +225,7 @@ public class StatementParser {
         if (position < tokens.size()) {
             String[] allValues = ArrayUtils.add(values, value);
             Token token = tokens.get(position);
+            System.out.println(token);
             if (token.getType() == type && Arrays.stream(allValues).anyMatch(t -> Objects.equals(t, token.getValue()))) {
                 position++;
                 return token;
@@ -233,7 +236,7 @@ public class StatementParser {
         String problem = ErrorConstants.SYNTAX_GALAT_HAI;
         String solution = String.format("After `%s` declaration expected `%s, %s` lexeme", previousToken,type, value);
         System.out.println("Poblem : "+problem);
-        System.out.println("Solution : "+solution);
+        System.out.println("`Solution : "+solution);
         throw new SyntaxException(problem, solution);
     }
 

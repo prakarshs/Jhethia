@@ -15,8 +15,10 @@ public class NotOperator extends UnaryOperator {
     @Override
     public Literal<?> calc(Literal<?> literal) {
         if (literal instanceof LogicalLiteral) {
+            System.out.println("in not operator class success logical");
             return new LogicalLiteral(!((LogicalLiteral) literal.getLiteral()).getLiteral());
         } else {
+            System.out.println("in not operator class fail logical");
             String problem = ErrorConstants.OPERATION_IMPOSSIBLE;
             String solution = String.format("Unable to perform NOT operator for non logical value `%s`", literal);
             System.out.println("Poblem : "+problem);

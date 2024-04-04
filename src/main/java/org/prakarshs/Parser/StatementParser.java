@@ -114,12 +114,12 @@ public class StatementParser {
         if (position < tokens.size()) {
             Token token = tokens.get(position);
             if (Stream.of(tokenTypes).anyMatch(t -> t == token.getType())) {
+                System.out.println(token.getType()+", "+token.getValue());
                 position++;
                 return token;
             }
         }
         Token previousToken = tokens.get(position - 1);
-
         String problem = ErrorConstants.SYNTAX_GALAT_HAI;
         String solution = String.format("After `%s` declaration expected any of the following lexemes `%s`", previousToken, Arrays.toString(tokenTypes));
         System.out.println("Poblem : "+problem);

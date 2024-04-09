@@ -20,11 +20,15 @@ public class InputStatement implements Statement{
         System.out.printf("enter \"%s\" >>> ", variableName.replace("_", " "));
         String line = consoleSupplier.get();
 
-        Literal<?> literal;
+        Literal<?> literal = null;
         if (line.matches("[0-9]+")) {
             literal = new NumericalLiteral(Integer.parseInt(line));
         } else if (line.matches("sahi_baat_hai|galat_baat_hai")) {
-            literal = new LogicalLiteral(Boolean.valueOf(line));
+
+            if(line.equals("sahi_baat_hai"))
+                literal = new LogicalLiteral(true);
+            else if (line.equals("galat_baat_hai"))
+                literal = new LogicalLiteral(false);
         } else {
             literal = new TextLiteral(line);
         }

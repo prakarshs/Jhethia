@@ -1,3 +1,7 @@
 lijiye_baapuji first_value
-dekhiye_baapuji first_value == 10
+lijiye_baapuji second_value
+
+ans = first_value < second_value
+
+dekhiye_baapuji "ans: "+ ans
 

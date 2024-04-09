@@ -167,7 +167,7 @@ public class StatementParser {
             case Logical:
                 return new LogicalLiteral(Boolean.valueOf(value));
             case Text:
-                System.out.println("text literal");
+//                System.out.println("text literal");
                 return new TextLiteral(value);
             case Variable:
             default:
@@ -225,7 +225,7 @@ public class StatementParser {
         if (position < tokens.size()) {
             String[] allValues = ArrayUtils.add(values, value);
             Token token = tokens.get(position);
-            System.out.println(token);
+//            System.out.println(token);
             if (token.getType() == type && Arrays.stream(allValues).anyMatch(t -> Objects.equals(t, token.getValue()))) {
                 position++;
                 return token;

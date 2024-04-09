@@ -8,7 +8,11 @@ public class Literal<T extends Comparable<T>> implements Expression {
     private final T literal;
     @Override
     public String toString() {
-        return literal.toString();
+        if(literal.toString().equals("true"))
+            return "sahi baat hai !";
+        else if (literal.toString().equals("false"))
+            return "galat baat hai !";
+        else return literal.toString();
     }
 
     @Override

@@ -1,2 +1,12 @@
-lijiye_baapuji is_happy
-dekhiye_baapuji is_happy
+dhancha Person
+    yeh_lo name
+    yeh_lo experience
+    yeh_lo is_developer
+khatam
+
+lijiye_baapuji your_name
+lijiye_baapuji your_experience_in_years
+lijiye_baapuji do_you_like_programming
+
+person = naya Person [your_name your_experience_in_years do_you_like_programming]
+dekhiye_baapuji person

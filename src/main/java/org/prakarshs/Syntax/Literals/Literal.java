@@ -12,7 +12,8 @@ public class Literal<T extends Comparable<T>> implements Expression {
             return "sahi baat hai !";
         else if (literal.toString().equals("false"))
             return "galat baat hai !";
-        else return literal.toString();
+
+        return literal.toString();
     }
 
     @Override

@@ -24,7 +24,6 @@ public class InputStatement implements Statement{
         if (line.matches("[0-9]+")) {
             literal = new NumericalLiteral(Integer.parseInt(line));
         } else if (line.matches("sahi_baat_hai|galat_baat_hai")) {
-
             if(line.equals("sahi_baat_hai"))
                 literal = new LogicalLiteral(true);
             else if (line.equals("galat_baat_hai"))

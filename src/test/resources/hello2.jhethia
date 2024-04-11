@@ -1,6 +1,6 @@
 lijiye_baapuji first_value
 lijiye_baapuji second_value
 
-ans = first_value > second_value
+ans = first_value / second_value
 
-dekhiye_baapuji "Your Ans:- "+
+dekhiye_baapuji "Your Ans: "+ ans

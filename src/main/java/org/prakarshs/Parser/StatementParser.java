@@ -138,11 +138,12 @@ public class StatementParser {
 
     @SneakyThrows
     private Expression readExpression() {
-
         Expression left = nextExpression();
+
         while (peek(TokenType.Operator)) {
             Token operation = next(TokenType.Operator);
-            Class<? extends OperatorExpression> operatorType = OperatorEnum.getType(operation.getValue());
+            OperatorEnum operator = OperatorEnum.getType(operation.getValue());
+            Class<? extends OperatorExpression> operatorType = operator.getType();
             if (BinaryOperator.class.isAssignableFrom(operatorType)) {
                 Expression right = nextExpression();
                 left = operatorType

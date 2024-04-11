@@ -26,10 +26,9 @@ public enum OperatorEnum {
     OperatorEnum(String character, Integer precedence) {
         this(character, null, precedence);
     }
-    public static Class<? extends OperatorExpression> getType(String character) {
+    public static OperatorEnum getType(String character) {
         return Arrays.stream(values())
                 .filter(t -> Objects.equals(t.getCharacter(),character))
-                .map(OperatorEnum::getType)
                 .findAny().orElse(null);
     }
 

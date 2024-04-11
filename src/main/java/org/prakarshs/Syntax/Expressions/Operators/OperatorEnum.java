@@ -9,18 +9,19 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Getter
 public enum OperatorEnum {
-    Not("!", NotOperator.class),
-    Addition("+", AdditionOperator.class),
-    Subtraction("-", SubstractionOperator.class),
-    Multiplication("*", MultiplicationOperator.class),
-    Division("/", DivisionOperator.class),
-    Equality("==", EqualsOperator.class),
-    GreaterThan(">", GreaterThanOperator.class),
-    LessThan("<", LessThanOperator.class),
-    StructureValue("ka", StructOperator.class);
+    Not("!", NotOperator.class,5),
+    Addition("+", AdditionOperator.class,3),
+    Subtraction("-", SubstractionOperator.class,3),
+    Multiplication("*", MultiplicationOperator.class,4),
+    Division("/", DivisionOperator.class,4),
+    Equality("==", EqualsOperator.class,2),
+    GreaterThan(">", GreaterThanOperator.class,2),
+    LessThan("<", LessThanOperator.class,2),
+    StructureValue("ka", StructOperator.class,5);
 
     private final String character;
     private final Class<? extends OperatorExpression> type;
+    private final Integer precedence;
 
 
     public static Class<? extends OperatorExpression> getType(String character) {
@@ -30,4 +31,7 @@ public enum OperatorEnum {
                 .findAny().orElse(null);
     }
 
+    public boolean greaterThan(OperatorEnum operator) {
+        return getPrecedence().compareTo(operator.getPrecedence()) > 0;
+    }
 }

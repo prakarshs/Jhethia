@@ -186,35 +186,7 @@ public class StatementParser {
         return false;
     }
 
-    private Expression readInstance() {
 
-        next(TokenType.Keyword, "naya"); //skip new
-        Token type = next(TokenType.Variable);
-        List<Expression> arguments = new ArrayList<>();
-
-        if (peek(TokenType.GroupDivider, "[")) {
-
-            next(TokenType.GroupDivider, "["); //skip open square bracket
-
-            while (!peek(TokenType.GroupDivider, "]")) {
-                Expression value = readExpression();
-                arguments.add(value);
-            }
-
-            next(TokenType.GroupDivider, "]"); //skip close square bracket
-        }
-
-        StructDefinition definition = structures.get(type.getValue());
-        if (definition == null) {
-            String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-            String solution = String.format("Structure is not defined: %s", type.getValue());
-            System.out.println("Poblem : "+problem);
-            System.out.println("Solution : "+solution);
-            throw new SyntaxException(problem, solution);
-        }
-        return new StructExpression(definition,variables::get,arguments);
-
-    }
 
     public Statement parse() {
         CompoundStatement root = new CompoundStatement();
@@ -272,7 +244,7 @@ public class StatementParser {
             while (peek(TokenType.Operator, TokenType.Variable, TokenType.Numeric, TokenType.Logical, TokenType.Text)) {
                 Token token = next();
                 switch (token.getType()) {
-                    case Operator:
+                    case Operator: {
                         OperatorEnum operator = OperatorEnum.getType(token.getValue());
                         switch (operator) {
                             case LeftParen:
@@ -289,8 +261,37 @@ public class StatementParser {
                                 operators.push(operator);
                         }
                         break;
+                    }
+                    default: {
+                        String value = token.getValue();
+                        Expression operand;
+                        switch (token.getType()) {
+                            case Numeric:
+                                operand = new NumericalLiteral(Integer.parseInt(value));
+                                break;
+                            case Logical:
+                                operand = new LogicalLiteral(Boolean.valueOf(value));
+                                break;
+                            case Text:
+                                operand = new TextLiteral(value);
+                                break;
+                            case Variable:
+                            default:
+                                if (!operators.isEmpty() && operators.peek() == OperatorEnum.StructureInstance) {
+                                    operand = readInstance(token);
+                                } else {
+                                    operand = new Variable(value, variables::get, variables::put);
+                                }
+                        }
+                        operands.push(operand);
+                    }
                 }
             }
+            while (!operators.isEmpty()) {
+                applyTopOperator();
+            }
+
+            return operands.pop();
         }
             @SneakyThrows
             private void applyTopOperator(){
@@ -314,6 +315,37 @@ public class StatementParser {
                     throw new SyntaxException(problem,solution);
                 }
             }
+
+        private Expression readInstance(Token token) {
+            StructDefinition definition = structures.get(token.getValue());
+
+            List<Expression> arguments = new ArrayList<>();
+
+            if (StatementParser.this.peek(TokenType.GroupDivider, "[")) {
+
+                next(TokenType.GroupDivider, "["); //skip open square bracket
+
+                while (!peek(TokenType.GroupDivider, "]")) {
+                    Expression value = readExpression();
+                    arguments.add(value);
+
+                    if (StatementParser.this.peek(TokenType.GroupDivider, ","))
+                        next();
+                }
+
+                next(TokenType.GroupDivider, "]"); //skip close square bracket
+            }
+
+            if (definition == null) {
+                String problem = ErrorConstants.SYNTAX_GALAT_HAI;
+                String solution = String.format("Structure is not defined: %s", type.getValue());
+                System.out.println("Poblem : "+problem);
+                System.out.println("Solution : "+solution);
+                throw new SyntaxException(problem, solution);
+            }
+            return new StructExpression(definition,variables::get,arguments);
+
+        }
 
     }
 

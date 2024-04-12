@@ -1,0 +1,32 @@
+kaam bubble_sort [ arr, n ]
+    chai_piyo i in 0..n - 1
+    chai_piyo j in 0..n - i - 1
+    agar arr{j+1} < arr{j}
+                temp = arr{j}
+                arr{j} = arr{j + 1}
+                arr{j + 1} = temp
+    khatam
+       biscuit_khao
+    biscuit_khao
+khatam
+
+kaam is_sorted [ arr, n ]
+    chai_piyo i in 0..n - 1
+        agar arr{i} > arr{i+1}
+            bhejo "galat_baat_hai"
+        khatam
+    biscuit_khao
+    bhejo "sahi_baat_hai"
+khatam
+
+arr = {}
+arr_len = 20
+
+arr = {-1, 14, 12, 10, 8, 6, 4, 2, 0, 15, 13, 11, 9, 7, 5, 3, 1, -1, 14, 12}
+
+dekhiye_baapuji arr
+dekhiye_baapuji is_sorted [ arr, arr_len ]
+bubble_sort [ arr, arr_len ]
+dekhiye_baapuji "After sorting :"
+dekhiye_baapuji is_sorted [ arr, arr_len ]
+dekhiye_baapuji arr

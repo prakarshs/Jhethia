@@ -1,7 +1,7 @@
 package org.prakarshs.Syntax.Statements;
 
 import lombok.Getter;
-import org.prakarshs.context.ExceptionContext;
+import org.prakarshs.Context.ExceptionContext;
 import org.prakarshs.Syntax.Expressions.Expression;
 
 @Getter

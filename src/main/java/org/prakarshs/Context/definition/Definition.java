@@ -1,4 +1,4 @@
-package org.prakarshs.context.definition;
+package org.prakarshs.Context.definition;
 
 /**
  * Interface to specify structures supported by toy-language

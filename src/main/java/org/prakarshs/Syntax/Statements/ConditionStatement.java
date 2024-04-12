@@ -1,7 +1,7 @@
 package org.prakarshs.Syntax.Statements;
 
 import lombok.Getter;
-import org.prakarshs.context.MemoryContext;
+import org.prakarshs.Context.MemoryContext;
 import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Values.LogicalValue;
 import org.prakarshs.Syntax.Values.Value;

@@ -16,6 +16,11 @@ public class Value<T> implements Expression {
 
     @Override
     public String toString() {
+        if(value.toString().equals("true"))
+            return "sahi baat hai !";
+        else if (value.toString().equals("false"))
+            return "galat baat hai !";
+
         return value.toString();
     }
 

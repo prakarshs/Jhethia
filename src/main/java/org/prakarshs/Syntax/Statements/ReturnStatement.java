@@ -1,8 +1,8 @@
 package org.prakarshs.Syntax.Statements;
 
 import lombok.Getter;
-import org.prakarshs.context.ExceptionContext;
-import org.prakarshs.context.ReturnContext;
+import org.prakarshs.Context.ExceptionContext;
+import org.prakarshs.Context.ReturnContext;
 import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Values.Value;
 

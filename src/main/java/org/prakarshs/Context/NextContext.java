@@ -1,4 +1,4 @@
-package org.prakarshs.context;
+package org.prakarshs.Context;
 
 import org.prakarshs.Syntax.Statements.Loops.AbstractLoopStatement;
 import org.prakarshs.Syntax.Statements.Loops.NextStatement;

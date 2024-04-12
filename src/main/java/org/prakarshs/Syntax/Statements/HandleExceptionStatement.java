@@ -1,8 +1,8 @@
 package org.prakarshs.Syntax.Statements;
 
 import lombok.Getter;
-import org.prakarshs.context.ExceptionContext;
-import org.prakarshs.context.MemoryContext;
+import org.prakarshs.Context.ExceptionContext;
+import org.prakarshs.Context.MemoryContext;
 
 @Getter
 public class HandleExceptionStatement extends Statement {

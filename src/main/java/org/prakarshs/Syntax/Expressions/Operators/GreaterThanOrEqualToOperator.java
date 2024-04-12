@@ -1,6 +1,6 @@
 package org.prakarshs.Syntax.Expressions.Operators;
 
-import org.prakarshs.context.ExceptionContext;
+import org.prakarshs.Context.ExceptionContext;
 import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Values.ComparableValue;
 import org.prakarshs.Syntax.Values.LogicalValue;

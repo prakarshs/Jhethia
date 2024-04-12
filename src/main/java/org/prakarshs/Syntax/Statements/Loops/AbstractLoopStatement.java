@@ -1,6 +1,6 @@
 package org.prakarshs.Syntax.Statements.Loops;
 
-import org.prakarshs.context.*;
+import org.prakarshs.Context.*;
 import org.prakarshs.Syntax.Statements.Statement;
 import org.prakarshs.Syntax.Statements.CompositeStatement;
 

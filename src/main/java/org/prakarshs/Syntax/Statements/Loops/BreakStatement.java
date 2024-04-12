@@ -1,6 +1,6 @@
 package org.prakarshs.Syntax.Statements.Loops;
 
-import org.prakarshs.context.BreakContext;
+import org.prakarshs.Context.BreakContext;
 import org.prakarshs.Syntax.Statements.Statement;
 
 public class BreakStatement extends Statement {

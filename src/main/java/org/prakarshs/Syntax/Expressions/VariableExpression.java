@@ -3,7 +3,7 @@ package org.prakarshs.Syntax.Expressions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.prakarshs.context.MemoryContext;
+import org.prakarshs.Context.MemoryContext;
 import org.prakarshs.Syntax.Values.Value;
 
 @RequiredArgsConstructor

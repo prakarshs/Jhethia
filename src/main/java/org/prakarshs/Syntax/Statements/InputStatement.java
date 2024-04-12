@@ -1,7 +1,7 @@
 package org.prakarshs.Syntax.Statements;
 
 import lombok.Getter;
-import org.prakarshs.context.MemoryContext;
+import org.prakarshs.Context.MemoryContext;
 import org.prakarshs.Syntax.Values.LogicalValue;
 import org.prakarshs.Syntax.Values.NumericValue;
 import org.prakarshs.Syntax.Values.TextValue;
@@ -26,11 +26,14 @@ public class InputStatement extends Statement {
         System.out.printf("enter \"%s\" >>> ", name.replace("_", " "));
         String line = consoleSupplier.get();
 
-        Value<?> value;
+        Value<?> value=null;
         if (line.matches(TokenType.Numeric.getRegex())) {
             value = new NumericValue(Double.parseDouble(line));
-        } else if (line.matches(TokenType.Logical.getRegex())) {
-            value = new LogicalValue(Boolean.valueOf(line));
+        } else if (line.matches("sahi_baat_hai|galat_baat_hai")) {
+            if(line.equals("sahi_baat_hai"))
+                value = new LogicalValue(true);
+            else if (line.equals("galat_baat_hai"))
+                value = new LogicalValue(false);
         } else {
             value = new TextValue(line);
         }

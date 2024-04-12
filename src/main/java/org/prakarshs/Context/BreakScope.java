@@ -1,4 +1,4 @@
-package org.prakarshs.context;
+package org.prakarshs.Context;
 
 import lombok.Getter;
 import org.prakarshs.Syntax.Statements.Loops.BreakStatement;

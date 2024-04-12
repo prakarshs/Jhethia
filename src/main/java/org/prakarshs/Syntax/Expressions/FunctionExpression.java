@@ -3,12 +3,12 @@ package org.prakarshs.Syntax.Expressions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.prakarshs.context.definition.*;
+import org.prakarshs.Context.definition.*;
 import org.prakarshs.Syntax.Values.ClassValue;
 import org.prakarshs.Syntax.Values.NullValue;
 import org.prakarshs.Syntax.Values.Value;
 import org.prakarshs.Syntax.Statements.FunctionStatement;
-import org.prakarshs.context.*;
+import org.prakarshs.Context.*;
 
 import java.util.ArrayList;
 import java.util.List;

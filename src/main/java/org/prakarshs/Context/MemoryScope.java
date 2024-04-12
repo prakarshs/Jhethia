@@ -1,4 +1,4 @@
-package org.prakarshs.context;
+package org.prakarshs.Context;
 
 import org.prakarshs.Syntax.Values.NullValue;
 import org.prakarshs.Syntax.Values.Value;

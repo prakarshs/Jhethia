@@ -1,6 +1,6 @@
 package org.prakarshs.Syntax.Expressions.Operators;
 
-import org.prakarshs.context.ExceptionContext;
+import org.prakarshs.Context.ExceptionContext;
 import org.prakarshs.Syntax.Expressions.AssignExpression;
 import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Expressions.FunctionExpression;

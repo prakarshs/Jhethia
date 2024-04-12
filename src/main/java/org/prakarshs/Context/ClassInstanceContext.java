@@ -1,4 +1,4 @@
-package org.prakarshs.context;
+package org.prakarshs.Context;
 
 import org.prakarshs.Syntax.Expressions.ExpressionReader;
 import org.prakarshs.Syntax.Expressions.FunctionExpression;

@@ -1,9 +1,9 @@
 package org.prakarshs;
 
 import lombok.SneakyThrows;
-import org.prakarshs.context.ExceptionContext;
-import org.prakarshs.context.MemoryContext;
-import org.prakarshs.context.definition.DefinitionContext;
+import org.prakarshs.Context.ExceptionContext;
+import org.prakarshs.Context.MemoryContext;
+import org.prakarshs.Context.definition.DefinitionContext;
 import org.prakarshs.Syntax.Statements.CompositeStatement;
 import org.prakarshs.Parser.LexicalParser;
 import org.prakarshs.Parser.StatementParser;

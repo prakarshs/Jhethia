@@ -1,7 +1,7 @@
 package org.prakarshs.Syntax.Statements.Loops;
 
-import org.prakarshs.context.ExceptionContext;
-import org.prakarshs.context.MemoryContext;
+import org.prakarshs.Context.ExceptionContext;
+import org.prakarshs.Context.MemoryContext;
 import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Expressions.VariableExpression;
 import org.prakarshs.Syntax.Values.IterableValue;

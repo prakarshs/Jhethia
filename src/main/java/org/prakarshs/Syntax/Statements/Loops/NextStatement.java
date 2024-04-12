@@ -1,7 +1,7 @@
 package org.prakarshs.Syntax.Statements.Loops;
 
 import org.prakarshs.Syntax.Statements.Statement;
-import org.prakarshs.context.NextContext;
+import org.prakarshs.Context.NextContext;
 
 public class NextStatement extends Statement {
     public NextStatement(Integer rowNumber, String blockName) {

@@ -15,7 +15,7 @@ import org.prakarshs.Syntax.Values.LogicalValue;
 import org.prakarshs.Tokens.Token;
 import org.prakarshs.Tokens.TokenType;
 import org.prakarshs.Tokens.TokensStack;
-import org.prakarshs.context.definition.*;
+import org.prakarshs.Context.definition.*;
 
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class StatementParser {
         if (tokens.peek(TokenType.Operator, TokenType.Variable, TokenType.This))
             return true;
         if (tokens.peek(TokenType.Keyword)) {
-            return !tokens.peek(TokenType.Keyword, "yatoh", "warna", "rescue", "ensure", "khatam");
+            return !tokens.peek(TokenType.Keyword, "yatoh", "warna", "rescue", "ensure", "khatam","biscuit_khao");
         }
         return false;
     }
@@ -104,7 +104,7 @@ public class StatementParser {
             case "bhejo":
                 parseReturnStatement(token);
                 break;
-            case "ghumaghum":
+            case "chai_piyo":
                 parseLoopStatement(token);
                 break;
             case "break":
@@ -256,7 +256,7 @@ public class StatementParser {
         compositeStatement.addStatement(statement);
     }
 
-    private void parseLoopStatement(Token rowToken) {
+    private void  parseLoopStatement(Token rowToken) {
         Expression loopExpression = ExpressionReader.readExpression(tokens);
         if (loopExpression instanceof OperatorExpression || loopExpression instanceof VariableExpression) {
             AbstractLoopStatement loopStatement;
@@ -295,7 +295,7 @@ public class StatementParser {
 
             DefinitionScope loopScope = DefinitionContext.newScope();
             StatementParser.parse(this, loopStatement, loopScope);
-            tokens.next(TokenType.Keyword, "khatam");
+            tokens.next(TokenType.Keyword, "biscuit_khao");
 
             compositeStatement.addStatement(loopStatement);
         }

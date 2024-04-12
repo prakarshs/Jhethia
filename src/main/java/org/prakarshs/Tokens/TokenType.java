@@ -14,7 +14,7 @@ public enum TokenType {
 
     Whitespace("[\\s\\t]"),
 
-    Keyword("(agar|yatoh|warna|khatam|dekhiye_baapuji|lijiye_baapuji|kilass|kaam|bhejo|ghumaghum|in|by|break|agla|assert|raise|ishtart|rescue|ensure)(?=\\s|$)(?!_)"),
+    Keyword("(agar|yatoh|warna|khatam|dekhiye_baapuji|lijiye_baapuji|kilass|kaam|bhejo|chai_piyo|biscuit_khao|in|by|break|agla|assert|raise|ishtart|rescue|ensure)(?=\\s|$)(?!_)"),
 
     GroupDivider("(\\[|\\]|\\,|\\{|}|\\.{2}|(\\:(?!\\:)))"),
 

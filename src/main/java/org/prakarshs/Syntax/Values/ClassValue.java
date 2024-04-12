@@ -1,9 +1,9 @@
 package org.prakarshs.Syntax.Values;
 
 import lombok.Getter;
-import org.prakarshs.context.MemoryContext;
-import org.prakarshs.context.MemoryScope;
-import org.prakarshs.context.definition.ClassDefinition;
+import org.prakarshs.Context.MemoryContext;
+import org.prakarshs.Context.MemoryScope;
+import org.prakarshs.Context.definition.ClassDefinition;
 
 import java.util.Iterator;
 import java.util.Map;

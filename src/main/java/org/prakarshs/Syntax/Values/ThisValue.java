@@ -1,6 +1,6 @@
 package org.prakarshs.Syntax.Values;
 
-import org.prakarshs.context.ClassInstanceContext;
+import org.prakarshs.Context.ClassInstanceContext;
 
 public class ThisValue extends Value<ClassValue> {
 

@@ -1,6 +1,6 @@
 package org.prakarshs.Syntax.Expressions.Operators;
 
-import org.prakarshs.context.definition.ClassDetails;
+import org.prakarshs.Context.definition.ClassDetails;
 import org.prakarshs.Syntax.Expressions.Expression;
 import org.prakarshs.Syntax.Expressions.VariableExpression;
 import org.prakarshs.Syntax.Values.ClassValue;

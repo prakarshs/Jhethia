@@ -1,4 +1,4 @@
-package org.prakarshs.context.definition;
+package org.prakarshs.Context.definition;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

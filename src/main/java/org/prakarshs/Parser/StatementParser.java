@@ -292,6 +292,29 @@ public class StatementParser {
                 }
             }
         }
+            @SneakyThrows
+            private void applyTopOperator(){
+                OperatorEnum operator = operators.pop();
+                Class<? extends OperatorExpression> operatorType = operator.getType();
+                Expression left = operands.pop();
+                if (BinaryOperator.class.isAssignableFrom(operatorType)) {
+                    Expression right = operands.pop();
+                    operands.push(operatorType
+                            .getConstructor(Expression.class, Expression.class)
+                            .newInstance(right, left));
+                } else if (UnaryOperator.class.isAssignableFrom(operatorType)) {
+                    operands.push(operatorType
+                            .getConstructor(Expression.class)
+                            .newInstance(left));
+                } else {
+                    String problem = ErrorConstants.SYNTAX_GALAT_HAI;
+                    String solution = String.format("Operator `%s` is not supported", operatorType);
+                    System.out.println("Poblem : "+problem);
+                    System.out.println("Solution : "+solution);
+                    throw new SyntaxException(problem,solution);
+                }
+            }
+
     }
 
 

@@ -1,0 +1,20 @@
+kaam binary_search [ arr, n, lo, hi, key ]
+    agar hi >= lo
+        mid = (hi + lo) // 2
+        agar arr{mid} < key
+            bhejo binary_search [ arr, n, mid + 1, hi, key ]
+        yatoh arr{mid} > key
+            bhejo binary_search [ arr, n, lo, mid - 1, key ]
+        warna
+            bhejo mid
+        khatam
+    warna
+        bhejo -1
+    khatam
+    bhejo
+khatam
+
+arr = {10, 20, 30, 50, 60, 80, 110, 130, 140, 170}
+n = 10
+
+dekhiye_baapuji binary_search [ arr, n, 0, n - 1, 110 ]

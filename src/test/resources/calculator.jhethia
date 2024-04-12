@@ -1,0 +1,56 @@
+kilass Add [x, y]
+    kaam sum
+        bhejo x + y
+    khatam
+khatam
+
+kilass Mul [a, b]
+    kaam mul
+        bhejo a * b
+    khatam
+khatam
+
+kilass Sub [a, b]
+    kaam sub
+        bhejo a - b
+    khatam
+khatam
+
+kilass Div [m, n]
+    kaam div
+        bhejo m / n
+    khatam
+khatam
+
+kilass Exp [m, n]
+    kaam exp
+        bhejo m ** n
+    khatam
+khatam
+
+kilass Fib [ n ]
+    kaam fib
+        bhejo fib [ n ]
+    khatam
+
+    kaam fib [ n ]
+        agar n < 2
+            bhejo n
+        khatam
+        bhejo fib [ n - 1 ] + fib [ n - 2 ]
+    khatam
+khatam
+
+kilass Calculator [p, q]: Add [p, q], Sub [q, p],
+                         Mul [p, q], Div [q, p],
+                         Exp [p, q], Fib [ q ]
+khatam
+
+calc = naya Calculator [2, 10]
+
+dekhiye_baapuji "Sum : " +calc ka sum []
+dekhiye_baapuji "Substraction : " +calc ka sub []
+dekhiye_baapuji "Multiplication : " +calc ka mul []
+dekhiye_baapuji "Division : " +calc ka div []
+dekhiye_baapuji "Exponent : " +calc ka exp []
+dekhiye_baapuji "Fibonacci : " +calc ka fib []

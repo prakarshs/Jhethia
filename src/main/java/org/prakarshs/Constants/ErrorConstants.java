@@ -5,5 +5,4 @@ public class ErrorConstants {
     public static final String OPERATION_IMPOSSIBLE = "Arre Chalu Ji ! Pandey Ji ! Ye Operation Impowshibal Hai !";
     public static final String EXECUTION_IMPOSSIBLE = "Aye Pagal Aurat ! Ye Execute Karna Impowshibal Hai !";
     public static final String DIVISION_BY_ZERO = "Aye Dobiii ! Zero Se Divide Kar Rahi Hai Queen Victoria ?!";
-
 }

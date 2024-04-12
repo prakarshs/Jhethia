@@ -37,7 +37,7 @@ public class ClassPropertyOperator extends BinaryOperatorExpression implements A
             }
         }
 
-        return ExceptionContext.raiseException(String.format("Unable to access class's property `%s``", getRight()));
+        return ExceptionContext.raiseException(String.format("Class Ki Property Access Nahi Kar Pa Raha Mehta Saab `%s``", getRight()));
     }
 
     @Override

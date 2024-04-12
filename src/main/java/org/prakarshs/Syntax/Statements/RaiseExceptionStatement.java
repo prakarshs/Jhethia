@@ -21,7 +21,7 @@ public class RaiseExceptionStatement extends Statement {
         Value<?> value = expression.evaluate();
         if (value != null) {
             if (value == NullValue.NULL_INSTANCE) {
-                value = new TextValue("Khaali Exception");
+                value = new TextValue("Khaali(Null) Exception Hai Daya!");
             }
             ExceptionContext.raiseException(value);
         }

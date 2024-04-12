@@ -20,7 +20,7 @@ public class AssignmentOperator extends BinaryOperatorExpression {
         if (getLeft() instanceof AssignExpression) {
             return ((AssignExpression) getLeft()).assign(right);
         } else {
-            return ExceptionContext.raiseException(String.format("Unable to make an assignment for `%s``", getLeft()));
+            return ExceptionContext.raiseException(String.format("Shorey. Ashignment Nahi Ho Payega. `%s``", getLeft()));
         }
     }
 }

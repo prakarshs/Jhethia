@@ -19,7 +19,7 @@ public class AssertStatement extends Statement {
     public void execute() {
         Value<?> value = expression.evaluate();
         if (value instanceof LogicalValue && !((LogicalValue) value).getValue()) {
-            ExceptionContext.raiseException("Assert Karne Me Error");
+            ExceptionContext.raiseException("Assert Karne Me Error Ho Gaya Mehta Saab!");
             ExceptionContext.addTracedStatement(this);
         }
     }

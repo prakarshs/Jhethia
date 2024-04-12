@@ -22,7 +22,7 @@ public class FloorDivisionOperator extends BinaryOperatorExpression {
         } else if (left instanceof NumericValue && right instanceof NumericValue) {
             return new NumericValue(Math.floor(((NumericValue) left).getValue() / ((NumericValue) right).getValue()));
         } else {
-            return ExceptionContext.raiseException(String.format("Unable to divide non numeric values `%s` and `%s`", left, right));
+            return ExceptionContext.raiseException(String.format("Do non numeric values Kaise Divide Hoga Baapuji? `%s` and `%s`", left, right));
         }
     }
 }

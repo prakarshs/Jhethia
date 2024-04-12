@@ -19,7 +19,7 @@ public class ExponentiationOperator extends BinaryOperatorExpression {
         if (left instanceof NumericValue && right instanceof NumericValue) {
             return new NumericValue(Math.pow(((NumericValue) left).getValue(), ((NumericValue) right).getValue()));
         } else {
-            return ExceptionContext.raiseException(String.format("Unable to make exponentiation with non numeric values `%s` and `%s`", left, right));
+            return ExceptionContext.raiseException(String.format("Exponentiation Non Numeric Values Pe Nahi Ho Payega`%s` and `%s`", left, right));
         }
     }
 }

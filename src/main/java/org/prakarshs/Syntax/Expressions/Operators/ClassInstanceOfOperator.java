@@ -20,7 +20,7 @@ public class ClassInstanceOfOperator extends BinaryOperatorExpression {
             String classType = ((VariableExpression) getRight()).getName();
             return new LogicalValue(((ClassValue) left).containsRelation(classType));
         } else {
-            return ExceptionContext.raiseException(String.format("Unable to perform `is` operator for the following operands `%s` and `%s`", left, getRight()));
+            return ExceptionContext.raiseException(String.format("`is` Operator Nahi Lagwa Paunga for operands `%s` and `%s`", left, getRight()));
         }
     }
 }

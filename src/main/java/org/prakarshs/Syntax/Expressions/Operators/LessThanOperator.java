@@ -22,7 +22,7 @@ public class LessThanOperator extends BinaryOperatorExpression {
         if (right == null) return null;
         boolean result;
         if (left == NullValue.NULL_INSTANCE || right == NullValue.NULL_INSTANCE) {
-            return ExceptionContext.raiseException(String.format("Unable to perform less than for NULL values `%s`, '%s'", left, right));
+            return ExceptionContext.raiseException(String.format("NULL Ko Less Than karegi Dobi??? Values : `%s`, '%s'", left, right));
         } else if (Objects.equals(left.getClass(), right.getClass()) && left instanceof ComparableValue) {
             //noinspection unchecked,rawtypes
             result = ((Comparable) left.getValue()).compareTo(right.getValue()) < 0;

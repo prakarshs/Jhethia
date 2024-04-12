@@ -19,6 +19,7 @@ public enum OperatorEnum {
     LessThan("<", LessThanOperator.class,2),
     StructureValue("ka", StructOperator.class,5),
     StructureInstance("naya", StructureInstanceOperator.class,5),
+    Assignment("=",AssignmentOperator.class,6),
     LeftParen("(",1),
     RightParen(")",1);
 

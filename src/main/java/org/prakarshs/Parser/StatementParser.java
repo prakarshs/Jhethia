@@ -101,7 +101,7 @@ public class StatementParser {
             case "kaam":
                 parseFunctionDefinition(token);
                 break;
-            case "return":
+            case "bhejo":
                 parseReturnStatement(token);
                 break;
             case "ghumaghum":

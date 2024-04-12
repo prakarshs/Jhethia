@@ -1,47 +1,13 @@
-kilass Add [x, y]
-    kaam sum
-        return x + y
+#
+# Define the Fibonacci number of the given element index
+#
+
+kaam fibonacci_number [ n ]
+    agar n < 2
+        return n
     khatam
+    return fibonacci_number [ n - 1 ] + fibonacci_number [ n - 2 ]
 khatam
 
-kilass Mul [a, b]
-    kaam mul
-        return a * b
-    khatam
-khatam
-
-kilass Sub [a, b]
-    kaam sub
-        return a - b
-    khatam
-khatam
-
-kilass Div [m, n]
-    kaam div
-        return m / n
-    khatam
-khatam
-
-kilass Exp [m, n]
-    kaam exp
-        return m ** n
-    khatam
-khatam
-
-kilass Fib [ n ]
-    kaam fib
-        return fib [ n ]
-    khatam
-
-    kaam fib [ n ]
-        agar n < 2
-            return n
-        khatam
-        return fib [ n - 1 ] + fib [ n - 2 ]
-    khatam
-khatam
-
-kilass Calculator [p, q]: Add [p, q], Sub [q, p],
-                         Mul [p, q], Div [q, p],
-                         Exp [p, q], Fib [ q ]
-khatam
+lijiye_baapuji index_number
+dekhiye_baapuji "fibonacci number is " + fibonacci_number [ index_number ]

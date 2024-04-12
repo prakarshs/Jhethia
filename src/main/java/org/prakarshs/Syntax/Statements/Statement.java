@@ -3,6 +3,11 @@ package org.prakarshs.Syntax.Statements;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-public interface Statement {
-    void execute();
+@RequiredArgsConstructor
+@Getter
+public abstract class Statement {
+    private final Integer rowNumber;
+    private final String blockName;
+
+    public abstract void execute();
 }

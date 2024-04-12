@@ -1,364 +1,366 @@
 package org.prakarshs.Parser;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.ArrayUtils;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.prakarshs.Constants.ErrorConstants;
 import org.prakarshs.Exceptions.SyntaxException;
-import org.prakarshs.Syntax.Expressions.Expression;
-import org.prakarshs.Syntax.Expressions.Operators.BinaryOperator;
-import org.prakarshs.Syntax.Expressions.Operators.OperatorEnum;
-import org.prakarshs.Syntax.Expressions.Operators.OperatorExpression;
-import org.prakarshs.Syntax.Expressions.Operators.UnaryOperator;
-import org.prakarshs.Syntax.Expressions.StructDefinition;
-import org.prakarshs.Syntax.Expressions.StructExpression;
-import org.prakarshs.Syntax.Expressions.Variable;
-import org.prakarshs.Syntax.Literals.Literal;
-import org.prakarshs.Syntax.Literals.LogicalLiteral;
-import org.prakarshs.Syntax.Literals.NumericalLiteral;
-import org.prakarshs.Syntax.Literals.TextLiteral;
 import org.prakarshs.Syntax.Statements.*;
+import org.prakarshs.Syntax.Statements.Loops.*;
+import org.prakarshs.Syntax.Expressions.Expression;
+import org.prakarshs.Syntax.Expressions.ExpressionReader;
+import org.prakarshs.Syntax.Expressions.VariableExpression;
+import org.prakarshs.Syntax.Expressions.Operators.OperatorExpression;
+import org.prakarshs.Syntax.Values.LogicalValue;
+
 import org.prakarshs.Tokens.Token;
 import org.prakarshs.Tokens.TokenType;
+import org.prakarshs.Tokens.TokensStack;
+import org.prakarshs.context.definition.*;
 
 import java.util.*;
-import java.util.stream.Stream;
 
-@Data
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Getter
 public class StatementParser {
-    private final List<Token> tokens;
-    private final Map<String, Literal<?>> variables;
-    private int position;
-    private final Map<String, StructDefinition> structures;
+    private final TokensStack tokens;
     private final Scanner scanner;
+    private final CompositeStatement compositeStatement;
 
-    public StatementParser(List<Token> tokens) {
-        this.tokens = tokens;
-        this.variables = new HashMap<>();
-        this.structures = new HashMap<>();
-        this.scanner = new Scanner(System.in);
+    public static void parse(StatementParser parent, CompositeStatement compositeStatement, DefinitionScope definitionScope) {
+        DefinitionContext.pushScope(definitionScope);
+        try {
+            StatementParser parser = new StatementParser(parent.getTokens(), parent.getScanner(), compositeStatement);
+            while (parser.hasNextStatement()) {
+                parser.parseExpression();
+            }
+        } finally {
+            DefinitionContext.endScope();
+        }
     }
 
-    public Statement parseExpression() {
-        Token token = next(TokenType.Keyword, TokenType.Variable);
+    public static void parse(List<Token> tokens, CompositeStatement compositeStatement) {
+        StatementParser parser = new StatementParser(new TokensStack(tokens), new Scanner(System.in), compositeStatement);
+        while (parser.hasNextStatement()) {
+            parser.parseExpression();
+        }
+    }
+
+    private boolean hasNextStatement() {
+        if (!tokens.hasNext())
+            return false;
+        if (tokens.peek(TokenType.Operator, TokenType.Variable, TokenType.This))
+            return true;
+        if (tokens.peek(TokenType.Keyword)) {
+            return !tokens.peek(TokenType.Keyword, "yatoh", "warna", "rescue", "ensure", "khatam");
+        }
+        return false;
+    }
+
+    private void parseExpression() {
+        Token token = tokens.next(TokenType.Keyword, TokenType.Variable, TokenType.This, TokenType.Operator);
         switch (token.getType()) {
-            case Variable: {
-                next(TokenType.Operator, "="); //skip equals
-                Expression value;
-                if (peek(TokenType.Keyword, "naya")) {
-                    value = readInstance();
-                } else {
-                    value = readExpression();
-                }
-
-                return new AssignStatement(token.getValue(), value, variables::put);
-            }
-            case Keyword: {
-                switch (token.getValue()) {
-                    case "dekhiye_baapuji": {
-
-                        Expression expression = readExpression();
-                        return new PrintStatement(expression);
-                    }
-                    case "lijiye_baapuji": {
-
-                        Token variable = next(TokenType.Variable);
-                        return new InputStatement(variable.getValue(), scanner::nextLine, variables::put);
-                    }
-                    case "agar": {
-                        Expression condition = readExpression();
-                        next(TokenType.Keyword, "toh"); //skip toh
-
-                        ConditionStatement conditionStatement = new ConditionStatement(condition);
-                        while (!peek(TokenType.Keyword, "khatam")) {
-                            Statement statement = parseExpression();
-                            conditionStatement.addStatement(statement);
-                        }
-                        next(TokenType.Keyword, "khatam"); //skip khatam
-
-                        return conditionStatement;
-                    }
-                    case "dhancha": {
-                        Token type = next(TokenType.Variable);
-
-                        Set<String> args = new LinkedHashSet<>();
-                        while (!peek(TokenType.Keyword, "khatam")) {
-
-                            next(TokenType.Keyword, "yeh_lo");
-
-                            Token arg = next(TokenType.Variable);
-                            args.add(arg.getValue());
-
-                        }
-                        next(TokenType.Keyword, "khatam"); //skip end
-
-                        structures.put(type.getValue(), new StructDefinition(type.getValue(), new ArrayList<>(args)));
-                        return null;
-                    }
-
-                }
-            }
+            case Variable:
+            case Operator:
+            case This:
+                parseExpressionStatement(token);
+                break;
+            case Keyword:
+                parseKeywordStatement(token);
+                break;
             default:
-            {
                 String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-                String solution = String.format("Statement can't start with the following lexeme `%s`", token);
+                String solution = String.format(String.format("Statement can't start with the following lexeme `%s`", token));
                 System.out.println("Poblem : "+problem);
                 System.out.println("Solution : "+solution);
                 throw new SyntaxException(problem,solution);
-            }
+
         }
     }
 
-    private Token next(TokenType type, TokenType... types) {
-        skipLineBreaks();
-        TokenType[] tokenTypes = ArrayUtils.add(types, type);
-        if (position < tokens.size()) {
-            Token token = tokens.get(position);
-            if (Stream.of(tokenTypes).anyMatch(t -> t == token.getType())) {
-                position++;
-                return token;
-            }
-        }
-        Token previousToken = tokens.get(position - 1);
-        String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-        String solution = String.format("After `%s` declaration expected any of the following lexemes `%s`", previousToken, Arrays.toString(tokenTypes));
-        System.out.println("Poblem : "+problem);
-        System.out.println("Solution : "+solution);
-        throw new SyntaxException(problem, solution);
+    private void parseExpressionStatement(Token rowToken) {
+        tokens.back(); // go back to read an expression from the beginning
+        Expression value = ExpressionReader.readExpression(tokens);
+        ExpressionStatement statement = new ExpressionStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), value);
+        compositeStatement.addStatement(statement);
     }
 
-    private boolean peek(TokenType type, String value) {
-        skipLineBreaks();
-        if (position < tokens.size()) {
-            Token token = tokens.get(position);
-            return type == token.getType() && token.getValue().equals(value);
-        }
-        return false;
-    }
-
-    @SneakyThrows
-    private Expression readExpression() {
-        Expression left = nextExpression();
-
-        while (peek(TokenType.Operator)) {
-            Token operation = next(TokenType.Operator);
-            OperatorEnum operator = OperatorEnum.getType(operation.getValue());
-            Class<? extends OperatorExpression> operatorType = operator.getType();
-            if (BinaryOperator.class.isAssignableFrom(operatorType)) {
-                Expression right = nextExpression();
-                left = operatorType
-                        .getConstructor(Expression.class, Expression.class)
-                        .newInstance(left, right);
-            } else if (UnaryOperator.class.isAssignableFrom(operatorType)) {
-                left = operatorType
-                        .getConstructor(Expression.class)
-                        .newInstance(left);
-            }
-        }
-
-        return left;
-    }
-
-    private Expression nextExpression() {
-        Token token = next(TokenType.Variable, TokenType.Numeric, TokenType.Logical, TokenType.Text, TokenType.Operator);
-        String value = token.getValue();
-        switch (token.getType()) {
-            case Numeric:
-                return new NumericalLiteral(Integer.parseInt(value));
-            case Logical:
-                return new LogicalLiteral(Boolean.valueOf(value));
-            case Text:
-//                System.out.println("text literal");
-                return new TextLiteral(value);
-            case Variable:
+    private void parseKeywordStatement(Token token) {
+        switch (token.getValue()) {
+            case "dekhiye_baapuji":
+                parsePrintStatement(token);
+                break;
+            case "lijiye_baapuji":
+                parseInputStatement(token);
+                break;
+            case "agar":
+                parseConditionStatement(token);
+                break;
+            case "kilass":
+                parseClassDefinition(token);
+                break;
+            case "kaam":
+                parseFunctionDefinition(token);
+                break;
+            case "return":
+                parseReturnStatement(token);
+                break;
+            case "ghumaghum":
+                parseLoopStatement(token);
+                break;
+            case "break":
+                parseBreakStatement(token);
+                break;
+            case "next":
+                parseNextStatement(token);
+                break;
+            case "assert":
+                parseAssertStatement(token);
+                break;
+            case "raise":
+                parseRaiseExceptionStatement(token);
+                break;
+            case "ishtart":
+                parseHandleExceptionStatement(token);
+                break;
             default:
-                return new Variable(value, variables::get, variables::put);
-        }
-    }
-    private boolean peek(TokenType type) {
-        skipLineBreaks();
-        if (position < tokens.size()) {
-            Token token = tokens.get(position);
-            return token.getType() == type;
-        }
-        return false;
-    }
-
-
-
-    public Statement parse() {
-        CompoundStatement root = new CompoundStatement();
-        while (position < tokens.size()) {
-            Statement statement = parseExpression();
-            root.addStatement(statement);
-        }
-        return root;
-    }
-
-    public Token next(TokenType type, String value, String... values) {
-        skipLineBreaks();
-        if (position < tokens.size()) {
-            String[] allValues = ArrayUtils.add(values, value);
-            Token token = tokens.get(position);
-//            System.out.println(token);
-            if (token.getType() == type && Arrays.stream(allValues).anyMatch(t -> Objects.equals(t, token.getValue()))) {
-                position++;
-                return token;
-            }
-        }
-        Token previousToken = tokens.get(position - 1);
-
-        String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-        String solution = String.format("After `%s` declaration expected `%s, %s` lexeme", previousToken,type, value);
-        System.out.println("Poblem : "+problem);
-        System.out.println("`Solution : "+solution);
-        throw new SyntaxException(problem, solution);
-    }
-
-    private void skipLineBreaks() {
-        while (tokens.get(position).getType() == TokenType.LineBreak
-                && ++position != tokens.size()) ;
-    }
-
-    private Token next() {
-        skipLineBreaks();
-        return tokens.get(position++);
-    }
-
-
-
-
-    private class ExpressionReader{
-        private final Stack<Expression> operands;
-        private final Stack<OperatorEnum> operators;
-
-        private ExpressionReader() {
-            this.operands = new Stack<>();
-            this.operators = new Stack<>();
-        }
-
-
-        private Expression readExpression() {
-            while (peek(TokenType.Operator, TokenType.Variable, TokenType.Numeric, TokenType.Logical, TokenType.Text)) {
-                Token token = next();
-                switch (token.getType()) {
-                    case Operator: {
-                        OperatorEnum operator = OperatorEnum.getType(token.getValue());
-                        switch (operator) {
-                            case LeftParen:
-                                operators.push(operator);
-                                break;
-                            case RightParen:
-                                while (!operators.empty() && operators.peek() != OperatorEnum.LeftParen)
-                                    applyTopOperator();
-                                operators.pop();
-                                break;
-                            default:
-                                while (!operators.isEmpty() && operators.peek().greaterThan(operator))
-                                    applyTopOperator();
-                                operators.push(operator);
-                        }
-                        break;
-                    }
-                    default: {
-                        String value = token.getValue();
-                        Expression operand;
-                        switch (token.getType()) {
-                            case Numeric:
-                                operand = new NumericalLiteral(Integer.parseInt(value));
-                                break;
-                            case Logical:
-                                operand = new LogicalLiteral(Boolean.valueOf(value));
-                                break;
-                            case Text:
-                                operand = new TextLiteral(value);
-                                break;
-                            case Variable:
-                            default:
-                                if (!operators.isEmpty() && operators.peek() == OperatorEnum.StructureInstance) {
-                                    operand = readInstance(token);
-                                } else {
-                                    operand = new Variable(value, variables::get, variables::put);
-                                }
-                        }
-                        operands.push(operand);
-                    }
-                }
-            }
-            while (!operators.isEmpty()) {
-                applyTopOperator();
-            }
-
-            return operands.pop();
-        }
-            @SneakyThrows
-            private void applyTopOperator(){
-                OperatorEnum operator = operators.pop();
-                Class<? extends OperatorExpression> operatorType = operator.getType();
-                Expression left = operands.pop();
-                if (BinaryOperator.class.isAssignableFrom(operatorType)) {
-                    Expression right = operands.pop();
-                    operands.push(operatorType
-                            .getConstructor(Expression.class, Expression.class)
-                            .newInstance(right, left));
-                } else if (UnaryOperator.class.isAssignableFrom(operatorType)) {
-                    operands.push(operatorType
-                            .getConstructor(Expression.class)
-                            .newInstance(left));
-                } else {
-                    String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-                    String solution = String.format("Operator `%s` is not supported", operatorType);
-                    System.out.println("Poblem : "+problem);
-                    System.out.println("Solution : "+solution);
-                    throw new SyntaxException(problem,solution);
-                }
-            }
-
-        private Expression readInstance(Token token) {
-            StructDefinition definition = structures.get(token.getValue());
-
-            List<Expression> arguments = new ArrayList<>();
-
-            if (StatementParser.this.peek(TokenType.GroupDivider, "[")) {
-
-                next(TokenType.GroupDivider, "["); //skip open square bracket
-
-                while (!peek(TokenType.GroupDivider, "]")) {
-                    Expression value = readExpression();
-                    arguments.add(value);
-
-                    if (StatementParser.this.peek(TokenType.GroupDivider, ","))
-                        next();
-                }
-
-                next(TokenType.GroupDivider, "]"); //skip close square bracket
-            }
-
-            if (definition == null) {
                 String problem = ErrorConstants.SYNTAX_GALAT_HAI;
-                String solution = String.format("Structure is not defined: %s", type.getValue());
+                String solution = String.format(String.format("Failed to parse a keyword: %s", token.getValue()));
                 System.out.println("Poblem : "+problem);
                 System.out.println("Solution : "+solution);
-                throw new SyntaxException(problem, solution);
+                throw new SyntaxException(problem,solution);
+        }
+    }
+
+    private void parsePrintStatement(Token rowToken) {
+        Expression expression = ExpressionReader.readExpression(tokens);
+        PrintStatement statement = new PrintStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), expression);
+        compositeStatement.addStatement(statement);
+    }
+
+    private void parseInputStatement(Token rowToken) {
+        Token variable = tokens.next(TokenType.Variable);
+        InputStatement statement = new InputStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), variable.getValue(), scanner::nextLine);
+        compositeStatement.addStatement(statement);
+    }
+
+    private void parseConditionStatement(Token rowToken) {
+        tokens.back();
+        ConditionStatement conditionStatement = new ConditionStatement(rowToken.getRowNumber(), compositeStatement.getBlockName());
+
+        while (!tokens.peek(TokenType.Keyword, "khatam")) {
+            //read condition case
+            Token type = tokens.next(TokenType.Keyword, "agar", "yatoh", "warna");
+            Expression caseCondition;
+            if (type.getValue().equals("warna")) {
+                caseCondition = new LogicalValue(true); //else case does not have the condition
+            } else {
+                caseCondition = ExpressionReader.readExpression(tokens);
             }
-            return new StructExpression(definition,variables::get,arguments);
 
+            //read case statements
+            CompositeStatement caseStatement = new CompositeStatement(rowToken.getRowNumber(), compositeStatement.getBlockName());
+            DefinitionScope caseScope = DefinitionContext.newScope();
+            StatementParser.parse(this, caseStatement, caseScope);
+
+            //add case
+            conditionStatement.addCase(caseCondition, caseStatement);
+        }
+        tokens.next(TokenType.Keyword, "khatam");
+
+        compositeStatement.addStatement(conditionStatement);
+    }
+
+    private void parseClassDefinition(Token rowToken) {
+        // read class details
+        ClassDetails classDetails = readClassDetails();
+
+        // read base types
+        Set<ClassDetails> baseTypes = new LinkedHashSet<>();
+        if (tokens.peek(TokenType.GroupDivider, ":")) {
+            while (tokens.peek(TokenType.GroupDivider, ":", ",")) {
+                tokens.next();
+                ClassDetails baseClassDetails = readClassDetails();
+                baseTypes.add(baseClassDetails);
+            }
+        }
+
+        // add class definition
+        DefinitionScope classScope = DefinitionContext.newScope();
+        ClassStatement classStatement = new ClassStatement(rowToken.getRowNumber(), classDetails.getName());
+        ClassDefinition classDefinition = new ClassDefinition(classDetails, baseTypes, classStatement, classScope);
+        DefinitionContext.getScope().addClass(classDefinition);
+
+        //parse class's statements
+        StatementParser.parse(this, classStatement, classScope);
+        tokens.next(TokenType.Keyword, "khatam");
+    }
+
+    private ClassDetails readClassDetails() {
+        Token className = tokens.next(TokenType.Variable);
+        List<String> classArguments = new ArrayList<>();
+        if (tokens.peek(TokenType.GroupDivider, "[")) {
+            tokens.next(); //skip open square bracket
+
+            while (!tokens.peek(TokenType.GroupDivider, "]")) {
+                Token argumentToken = tokens.next(TokenType.Variable);
+                classArguments.add(argumentToken.getValue());
+
+                if (tokens.peek(TokenType.GroupDivider, ","))
+                    tokens.next();
+            }
+
+            tokens.next(TokenType.GroupDivider, "]"); //skip close square bracket
+        }
+        return new ClassDetails(className.getValue(), classArguments);
+    }
+
+    private void parseFunctionDefinition(Token rowToken) {
+        Token name = tokens.next(TokenType.Variable);
+
+        List<String> arguments = new ArrayList<>();
+
+        if (tokens.peek(TokenType.GroupDivider, "[")) {
+
+            tokens.next(TokenType.GroupDivider, "["); //skip open square bracket
+
+            while (!tokens.peek(TokenType.GroupDivider, "]")) {
+                Token argumentToken = tokens.next(TokenType.Variable);
+                arguments.add(argumentToken.getValue());
+
+                if (tokens.peek(TokenType.GroupDivider, ","))
+                    tokens.next();
+            }
+
+            tokens.next(TokenType.GroupDivider, "]"); //skip close square bracket
+        }
+
+        //add function definition
+        String blockName = name.getValue();
+        if (compositeStatement instanceof ClassStatement) {
+            blockName = compositeStatement.getBlockName() + "#" + blockName;
+        }
+        FunctionStatement functionStatement = new FunctionStatement(rowToken.getRowNumber(), blockName);
+        DefinitionScope functionScope = DefinitionContext.newScope();
+        FunctionDetails functionDetails = new FunctionDetails(name.getValue(), arguments);
+        FunctionDefinition functionDefinition = new FunctionDefinition(functionDetails, functionStatement, functionScope);
+        DefinitionContext.getScope().addFunction(functionDefinition);
+
+        //parse function statements
+        StatementParser.parse(this, functionStatement, functionScope);
+        tokens.next(TokenType.Keyword, "khatam");
+    }
+
+    private void parseReturnStatement(Token rowToken) {
+        Expression expression = ExpressionReader.readExpression(tokens);
+        ReturnStatement statement = new ReturnStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), expression);
+        compositeStatement.addStatement(statement);
+    }
+
+    private void parseLoopStatement(Token rowToken) {
+        Expression loopExpression = ExpressionReader.readExpression(tokens);
+        if (loopExpression instanceof OperatorExpression || loopExpression instanceof VariableExpression) {
+            AbstractLoopStatement loopStatement;
+
+            if (loopExpression instanceof VariableExpression && tokens.peek(TokenType.Keyword, "in")) {
+                // loop <variable> in <bounds>
+                VariableExpression variable = (VariableExpression) loopExpression;
+                tokens.next(TokenType.Keyword, "in");
+                Expression bounds = ExpressionReader.readExpression(tokens);
+
+                if (tokens.peek(TokenType.GroupDivider, "..")) {
+                    // loop <variable> in <lower_bound>..<upper_bound>
+                    tokens.next(TokenType.GroupDivider, "..");
+                    Expression upperBound = ExpressionReader.readExpression(tokens);
+
+                    if (tokens.peek(TokenType.Keyword, "by")) {
+                        // loop <variable> in <lower_bound>..<upper_bound> by <step>
+                        tokens.next(TokenType.Keyword, "by");
+                        Expression step = ExpressionReader.readExpression(tokens);
+                        loopStatement = new ForLoopStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), variable, bounds, upperBound, step);
+                    } else {
+                        // use default step
+                        // loop <variable> in <lower_bound>..<upper_bound>
+                        loopStatement = new ForLoopStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), variable, bounds, upperBound);
+                    }
+
+                } else {
+                    // loop <variable> in <iterable>
+                    loopStatement = new IterableLoopStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), variable, bounds);
+                }
+
+            } else {
+                // loop <condition>
+                loopStatement = new WhileLoopStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), loopExpression);
+            }
+
+            DefinitionScope loopScope = DefinitionContext.newScope();
+            StatementParser.parse(this, loopStatement, loopScope);
+            tokens.next(TokenType.Keyword, "khatam");
+
+            compositeStatement.addStatement(loopStatement);
         }
 
     }
 
-
-    private boolean peek(TokenType type, TokenType... types) {
-        TokenType[] tokenTypes = ArrayUtils.add(types, type);
-        if (position < tokens.size()) {
-            Token token = tokens.get(position);
-            return Stream.of(tokenTypes).anyMatch(t -> t == token.getType());
-        }
-        return false;
+    private void parseBreakStatement(Token rowToken) {
+        BreakStatement statement = new BreakStatement(rowToken.getRowNumber(), compositeStatement.getBlockName());
+        compositeStatement.addStatement(statement);
     }
 
+    private void parseNextStatement(Token rowToken) {
+        NextStatement statement = new NextStatement(rowToken.getRowNumber(), compositeStatement.getBlockName());
+        compositeStatement.addStatement(statement);
+    }
 
+    private void parseAssertStatement(Token rowToken) {
+        Expression expression = ExpressionReader.readExpression(tokens);
+        AssertStatement statement = new AssertStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), expression);
+        compositeStatement.addStatement(statement);
+    }
+
+    private void parseRaiseExceptionStatement(Token rowToken) {
+        Expression expression = ExpressionReader.readExpression(tokens);
+        RaiseExceptionStatement statement = new RaiseExceptionStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(), expression);
+        compositeStatement.addStatement(statement);
+    }
+
+    private void parseHandleExceptionStatement(Token rowToken) {
+        // read begin block
+        CompositeStatement beginStatement = new CompositeStatement(rowToken.getRowNumber(), compositeStatement.getBlockName());
+        DefinitionScope beginScope = DefinitionContext.newScope();
+        StatementParser.parse(this, beginStatement, beginScope);
+
+        // read rescue block
+        CompositeStatement rescueStatement = null;
+        String errorVariable = null;
+        if (tokens.peek(TokenType.Keyword, "rescue")) {
+            tokens.next();
+
+            if (tokens.peekSameLine(TokenType.Variable)) {
+                errorVariable = tokens.next().getValue();
+            }
+
+            rescueStatement = new CompositeStatement(rowToken.getRowNumber(), compositeStatement.getBlockName());
+            DefinitionScope rescueScope = DefinitionContext.newScope();
+            StatementParser.parse(this, rescueStatement, rescueScope);
+        }
+
+        // read ensure block
+        CompositeStatement ensureStatement = null;
+        if (tokens.peek(TokenType.Keyword, "ensure")) {
+            tokens.next();
+
+            ensureStatement = new CompositeStatement(rowToken.getRowNumber(), compositeStatement.getBlockName());
+            DefinitionScope ensureScope = DefinitionContext.newScope();
+            StatementParser.parse(this, ensureStatement, ensureScope);
+        }
+
+        // skip end keyword
+        tokens.next(TokenType.Keyword, "khatam");
+
+        // construct a statement
+        HandleExceptionStatement statement = new HandleExceptionStatement(rowToken.getRowNumber(), compositeStatement.getBlockName(),
+                beginStatement, rescueStatement, ensureStatement, errorVariable);
+        compositeStatement.addStatement(statement);
+    }
 }
-

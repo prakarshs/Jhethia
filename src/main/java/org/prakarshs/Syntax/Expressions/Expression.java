@@ -1,7 +1,7 @@
 package org.prakarshs.Syntax.Expressions;
 
-import org.prakarshs.Syntax.Literals.Literal;
+import org.prakarshs.Syntax.Values.Value;
 
 public interface Expression {
-    Literal<?> evaluate();
+    Value<?> evaluate();
 }

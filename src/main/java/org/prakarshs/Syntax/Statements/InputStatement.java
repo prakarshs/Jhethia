@@ -1,37 +1,40 @@
 package org.prakarshs.Syntax.Statements;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.prakarshs.Syntax.Literals.Literal;
-import org.prakarshs.Syntax.Literals.LogicalLiteral;
-import org.prakarshs.Syntax.Literals.NumericalLiteral;
-import org.prakarshs.Syntax.Literals.TextLiteral;
+import lombok.Getter;
+import org.prakarshs.context.MemoryContext;
+import org.prakarshs.Syntax.Values.LogicalValue;
+import org.prakarshs.Syntax.Values.NumericValue;
+import org.prakarshs.Syntax.Values.TextValue;
+import org.prakarshs.Syntax.Values.Value;
+import org.prakarshs.Tokens.TokenType;
 
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
-@Data
-@AllArgsConstructor
-public class InputStatement implements Statement{
-    private final String variableName;
+
+@Getter
+public class InputStatement extends Statement {
+    private final String name;
     private final Supplier<String> consoleSupplier;
-    private final BiConsumer<String, Literal<?>> variableSetter;
+
+    public InputStatement(Integer rowNumber, String blockName, String name, Supplier<String> consoleSupplier) {
+        super(rowNumber, blockName);
+        this.name = name;
+        this.consoleSupplier = consoleSupplier;
+    }
+
     @Override
     public void execute() {
-        System.out.printf("enter \"%s\" >>> ", variableName.replace("_", " "));
+        System.out.printf("enter \"%s\" >>> ", name.replace("_", " "));
         String line = consoleSupplier.get();
 
-        Literal<?> literal = null;
-        if (line.matches("[0-9]+")) {
-            literal = new NumericalLiteral(Integer.parseInt(line));
-        } else if (line.matches("sahi_baat_hai|galat_baat_hai")) {
-            if(line.equals("sahi_baat_hai"))
-                literal = new LogicalLiteral(true);
-            else if (line.equals("galat_baat_hai"))
-                literal = new LogicalLiteral(false);
+        Value<?> value;
+        if (line.matches(TokenType.Numeric.getRegex())) {
+            value = new NumericValue(Double.parseDouble(line));
+        } else if (line.matches(TokenType.Logical.getRegex())) {
+            value = new LogicalValue(Boolean.valueOf(line));
         } else {
-            literal = new TextLiteral(line);
+            value = new TextValue(line);
         }
 
-        variableSetter.accept(variableName,literal);
+        MemoryContext.getScope().set(name, value);
     }
 }

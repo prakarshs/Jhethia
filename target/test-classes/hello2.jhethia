@@ -1,6 +1,47 @@
-lijiye_baapuji first_value
-lijiye_baapuji second_value
+kilass Add [x, y]
+    kaam sum
+        return x + y
+    khatam
+khatam
 
-ans = first_value / second_value
+kilass Mul [a, b]
+    kaam mul
+        return a * b
+    khatam
+khatam
 
-dekhiye_baapuji "Your Ans: "+ ans
+kilass Sub [a, b]
+    kaam sub
+        return a - b
+    khatam
+khatam
+
+kilass Div [m, n]
+    kaam div
+        return m / n
+    khatam
+khatam
+
+kilass Exp [m, n]
+    kaam exp
+        return m ** n
+    khatam
+khatam
+
+kilass Fib [ n ]
+    kaam fib
+        return fib [ n ]
+    khatam
+
+    kaam fib [ n ]
+        agar n < 2
+            return n
+        khatam
+        return fib [ n - 1 ] + fib [ n - 2 ]
+    khatam
+khatam
+
+kilass Calculator [p, q]: Add [p, q], Sub [q, p],
+                         Mul [p, q], Div [q, p],
+                         Exp [p, q], Fib [ q ]
+khatam

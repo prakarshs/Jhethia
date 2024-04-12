@@ -4,3 +4,4 @@ import org.prakarshs.Syntax.Expressions.Expression;
 
 public interface OperatorExpression extends Expression {
 }
+

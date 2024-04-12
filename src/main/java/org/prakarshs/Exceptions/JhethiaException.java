@@ -1,6 +1,7 @@
 package org.prakarshs.Exceptions;
 
 import lombok.Data;
+
 @Data
 public class JhethiaException extends RuntimeException{
     private String solution;

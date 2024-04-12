@@ -1,32 +1,25 @@
 package org.prakarshs.Syntax.Expressions.Operators;
 
-import org.prakarshs.Constants.ErrorConstants;
-import org.prakarshs.Exceptions.OperationException;
+import org.prakarshs.context.ExceptionContext;
 import org.prakarshs.Syntax.Expressions.Expression;
-import org.prakarshs.Syntax.Literals.Literal;
-import org.prakarshs.Syntax.Literals.NumericalLiteral;
+import org.prakarshs.Syntax.Values.NumericValue;
+import org.prakarshs.Syntax.Values.Value;
 
-public class DivisionOperator extends BinaryOperator{
+public class DivisionOperator extends BinaryOperatorExpression {
     public DivisionOperator(Expression left, Expression right) {
         super(left, right);
     }
 
     @Override
-    public Literal<?> calc(Literal<?> left, Literal<?> right) {
-        if (left instanceof NumericalLiteral && right instanceof NumericalLiteral) {
-            Integer rightValue = ((NumericalLiteral) right).getLiteral();
-            if (rightValue == 0) {
-                System.out.println("Poblem : "+ErrorConstants.DIVISION_BY_ZERO);
-                System.out.println("Solution : "+"Try With A different Denominator");
-                throw new OperationException(ErrorConstants.DIVISION_BY_ZERO,"Try With A different Denominator" );
-            }
-            return new NumericalLiteral(((NumericalLiteral) left).getLiteral() / rightValue);
+    public Value<?> evaluate() {
+        Value<?> left = getLeft().evaluate();
+        if (left == null) return null;
+        Value<?> right = getRight().evaluate();
+        if (right == null) return null;
+        if (left instanceof NumericValue && right instanceof NumericValue) {
+            return new NumericValue(((NumericValue) left).getValue() / ((NumericValue) right).getValue());
         } else {
-            String problem = ErrorConstants.OPERATION_IMPOSSIBLE;
-            String solution = String.format("Unable to divide non-numeric values `%s` by `%s`", left, right);
-            System.out.println("Poblem : "+problem);
-            System.out.println("Solution : "+solution);
-            throw new OperationException(problem, solution);
+            return ExceptionContext.raiseException(String.format("Unable to divide non numeric values `%s` and `%s`", left, right));
         }
     }
 }

@@ -18,7 +18,9 @@ public enum OperatorEnum {
     GreaterThan(">", GreaterThanOperator.class,2),
     LessThan("<", LessThanOperator.class,2),
     StructureValue("ka", StructOperator.class,5),
-    StructureInstance("naya", StructureInstanceOperator.class,5);
+    StructureInstance("naya", StructureInstanceOperator.class,5),
+    LeftParen("(",1),
+    RightParen(")",1);
 
     private final String character;
     private final Class<? extends OperatorExpression> type;

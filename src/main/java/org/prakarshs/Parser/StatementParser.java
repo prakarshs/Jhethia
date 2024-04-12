@@ -112,6 +112,7 @@ public class StatementParser {
     }
 
     private Token next(TokenType type, TokenType... types) {
+        skipLineBreaks();
         TokenType[] tokenTypes = ArrayUtils.add(types, type);
         if (position < tokens.size()) {
             Token token = tokens.get(position);
@@ -129,6 +130,7 @@ public class StatementParser {
     }
 
     private boolean peek(TokenType type, String value) {
+        skipLineBreaks();
         if (position < tokens.size()) {
             Token token = tokens.get(position);
             return type == token.getType() && token.getValue().equals(value);
@@ -176,6 +178,7 @@ public class StatementParser {
         }
     }
     private boolean peek(TokenType type) {
+        skipLineBreaks();
         if (position < tokens.size()) {
             Token token = tokens.get(position);
             return token.getType() == type;
@@ -223,6 +226,7 @@ public class StatementParser {
     }
 
     public Token next(TokenType type, String value, String... values) {
+        skipLineBreaks();
         if (position < tokens.size()) {
             String[] allValues = ArrayUtils.add(values, value);
             Token token = tokens.get(position);
@@ -239,6 +243,16 @@ public class StatementParser {
         System.out.println("Poblem : "+problem);
         System.out.println("`Solution : "+solution);
         throw new SyntaxException(problem, solution);
+    }
+
+    private void skipLineBreaks() {
+        while (tokens.get(position).getType() == TokenType.LineBreak
+                && ++position != tokens.size()) ;
+    }
+
+    private Token next() {
+        skipLineBreaks();
+        return tokens.get(position++);
     }
 
 }

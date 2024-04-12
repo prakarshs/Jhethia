@@ -1,6 +1,7 @@
 package org.prakarshs.Syntax.Literals;
 
 import lombok.Data;
+import lombok.Setter;
 import org.prakarshs.Syntax.Expressions.Expression;
 
 @Data

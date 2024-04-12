@@ -273,6 +273,22 @@ public class StatementParser {
                 Token token = next();
                 switch (token.getType()) {
                     case Operator:
+                        OperatorEnum operator = OperatorEnum.getType(token.getValue());
+                        switch (operator) {
+                            case LeftParen:
+                                operators.push(operator);
+                                break;
+                            case RightParen:
+                                while (!operators.empty() && operators.peek() != OperatorEnum.LeftParen)
+                                    applyTopOperator();
+                                operators.pop();
+                                break;
+                            default:
+                                while (!operators.isEmpty() && operators.peek().greaterThan(operator))
+                                    applyTopOperator();
+                                operators.push(operator);
+                        }
+                        break;
                 }
             }
         }

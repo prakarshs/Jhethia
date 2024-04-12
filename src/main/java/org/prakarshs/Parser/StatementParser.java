@@ -255,5 +255,39 @@ public class StatementParser {
         return tokens.get(position++);
     }
 
+
+
+
+    private class ExpressionReader{
+        private final Stack<Expression> operands;
+        private final Stack<OperatorEnum> operators;
+
+        private ExpressionReader() {
+            this.operands = new Stack<>();
+            this.operators = new Stack<>();
+        }
+
+
+        private Expression readExpression() {
+            while (peek(TokenType.Operator, TokenType.Variable, TokenType.Numeric, TokenType.Logical, TokenType.Text)) {
+                Token token = next();
+                switch (token.getType()) {
+                    case Operator:
+                }
+            }
+        }
+    }
+
+
+    private boolean peek(TokenType type, TokenType... types) {
+        TokenType[] tokenTypes = ArrayUtils.add(types, type);
+        if (position < tokens.size()) {
+            Token token = tokens.get(position);
+            return Stream.of(tokenTypes).anyMatch(t -> t == token.getType());
+        }
+        return false;
+    }
+
+
 }
 

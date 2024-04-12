@@ -172,7 +172,7 @@ public class StatementParser {
                 return new TextLiteral(value);
             case Variable:
             default:
-                return new Variable(value, variables::get);
+                return new Variable(value, variables::get, variables::put);
         }
     }
     private boolean peek(TokenType type) {

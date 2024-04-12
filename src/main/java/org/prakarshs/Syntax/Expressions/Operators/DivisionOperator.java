@@ -19,7 +19,7 @@ public class DivisionOperator extends BinaryOperatorExpression {
         if (left instanceof NumericValue && right instanceof NumericValue) {
             return new NumericValue(((NumericValue) left).getValue() / ((NumericValue) right).getValue());
         } else {
-            return ExceptionContext.raiseException(String.format("Do Non Numeric Values Ko Kaise Divide Karu. Chalu Ji ! Pandey Ji ! ( `%s` and `%s` )", left, right));
+            return ExceptionContext.raiseException(String.format("Do Non Numeric Values Ko Kaise Divide Karu? Chalu Ji ! Pandey Ji ! ( `%s` and `%s` )", left, right));
         }
     }
 }
